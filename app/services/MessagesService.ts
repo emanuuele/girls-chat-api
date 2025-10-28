@@ -15,12 +15,13 @@ export default class MessagesService {
         }
     }
 
-    public async createMessage(chatID: string | number, newMessage: { sentBy: string; sentTo: string; text: string; }) {
+    public async createMessage(newMessage: { sentBy: string; sentTo: string; text: string; }) {
         try {
             if (!newMessage.sentBy || !newMessage.sentTo || !newMessage.text) {
                 throw new Error("Os campos sentBy, sentTo e text são obrigatórios");
             }
             const chatsService = new ChatsService();
+            let chatID: string | number | null = null;
             const existingChat = await chatsService.chatBetweenUsers(newMessage.sentBy, newMessage.sentTo);
             if (!existingChat) {
                 const chat = await chatsService.createChat(newMessage.sentBy, newMessage.sentTo);
