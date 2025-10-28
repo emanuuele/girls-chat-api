@@ -13,11 +13,6 @@ export default class ChatsService {
                 .orWhere('participant', userID)
                 .preload('host')
                 .preload('participantUser')
-                .preload('messages', (messagesQuery) => {
-                    messagesQuery
-                        .orderBy('created_at', 'desc')
-                        .limit(1)
-                })
                 .orderBy('last_message_at', 'desc');
 
             return chats;

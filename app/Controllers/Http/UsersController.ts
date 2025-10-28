@@ -57,4 +57,17 @@ export default class UsersController {
             return response.json({ success: false, msg: error.message });
         }
     }
+
+    public async findById({ params, response }: HttpContextContract) {
+        try {
+            const userID = params.id;
+            if (!userID) {
+                throw new Error("O ID do usuário é obrigatório")
+            }
+            const user = await this.userService.getUserById(userID);
+            return response.json({ success: true, user })
+        } catch (error) {
+            return response.json({ success: false, msg: error.message })
+        }
+    }
 }

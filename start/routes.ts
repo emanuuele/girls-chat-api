@@ -43,6 +43,7 @@ Route.post('/criar-usuario', (ctx) => usersController.signUp(ctx))
 Route.post('/login', (ctx) => usersController.login(ctx))
 Route.get('/usuarios', (ctx) => usersController.index(ctx))
 Route.put('/atualizar-usuario/:id', (ctx) => usersController.update(ctx))
+Route.get('/usuario/:id', (ctx) => usersController.findById(ctx))
 
 Route.get('/chats', (ctx) => chatsController.index(ctx))
 Route.get('/chat/:id', (ctx) => chatsController.show(ctx))

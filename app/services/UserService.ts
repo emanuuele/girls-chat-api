@@ -72,4 +72,19 @@ export default class UserService {
             throw new Error("Erro ao buscar usuários: " + error.message);
         }
     }
+
+    public async getUserById(userID: string | number) {
+        try {
+            if (!userID) {
+                throw new Error("O ID do usuário é obrigatório")
+            }
+            const user = await User.find(userID);
+            if (!user) {
+                throw new Error("Usuário não encontrado")
+            }
+            return user;
+        } catch (error) {
+            throw new Error("Erro ao buscar usuário: " + error.message);
+        }
+    }
 }

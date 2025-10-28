@@ -1,5 +1,6 @@
 import Message from "App/Models/Message";
 import ChatsService from "./ChatsService";
+import Ws from "./IoSocketServer";
 
 export default class MessagesService {
     public async getMessagesByChatID(chatID: string) {
@@ -33,6 +34,10 @@ export default class MessagesService {
                 seen: false,
             });
             await chatsService.updateLastMessage(chatID || existingChat?.id || 0, newMessage.text);
+            
+            const finalChatId = Number(chatID) || existingChat?.id || 0;
+            Ws.emitNewMessage(finalChatId, messageRef);
+
             return messageRef;
         } catch (error) {
             throw new Error("Erro ao criar mensagem: " + error.message);

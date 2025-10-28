@@ -15,7 +15,7 @@ export default class ChatsController {
 
     public async show({ response, params }: HttpContextContract) {
         try {
-            const chatID = params.id;
+            const chatID = params.id.split('%')[0];
             const chat = await this.chatsService.showChat(chatID);
             if (!chat) {
                 throw new Error("Chat não encontrado");
