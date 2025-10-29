@@ -16,7 +16,7 @@ export default class ChatsService {
                 .preload('messages', (messagesQuery) => {
                     messagesQuery
                         .where((query) => {
-                            query.where('seen', false).whereNot('sentTo', userID)
+                            query.where('seen', false).whereNot('sentBy', userID)
                         })
                 })
                 .orderBy('last_message_at', 'desc');
