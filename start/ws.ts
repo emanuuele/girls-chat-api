@@ -16,7 +16,9 @@ ws.io.on('connection', (socket) => {
       };
       messagesService.createMessage(newMessage).then((messageRef) => {
           const message = { id: messageRef.id, ...newMessage };
-          ws.io.emit(`new-message-${messageRef.id_chat}`, message);
+          
+          ws.io.emit(`receive-message-${sentToID}`, message);
+          ws.io.emit(`receive-message-${sentByID}`, message);
       }).catch((error) => {
           console.error("Erro ao criar mensagem via WebSocket: " + error.message);
       });

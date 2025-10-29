@@ -22,17 +22,18 @@ export default class MessagesController {
                 text,
                 seen: false
             };
-            const messageRef = await this.messagesService.createMessage(chatID, newMessage);
+            const messageRef = await this.messagesService.createMessage(newMessage);
             return response.json({ success: true, data: messageRef });
         } catch (e) {
             return response.json({ success: false, msg: e.message });
         }
     }
 
-    public async updateSeenStatus({ response, params }: HttpContextContract) {
+    public async updateSeenStatus({ response, params, request }: HttpContextContract) {
         try {
             const chatID = params.id;
-            await this.messagesService.updateMessageSeenStatus(chatID);
+            const loggedUserID = request.input('userID');
+            await this.messagesService.updateMessageSeenStatus(chatID, loggedUserID);
             return response.json({ success: true, msg: "Status atualizado com sucesso" });
         } catch (e) {
             return response.json({ success: false, msg: e.message });

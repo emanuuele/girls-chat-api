@@ -7,6 +7,9 @@ export default class ChatsController {
         try {
             const userID = request.input('userID');
             const uniqueChats = await this.chatsService.getUserChats(userID);
+            uniqueChats.forEach(chat => {
+                console.log(`Chat ID: ${chat.id}, Last Message: ${chat.messages}`);
+            });
             return response.json({ success: true, chats: uniqueChats });
         } catch (error) {
             return response.json({ success: false, msg: error.message });

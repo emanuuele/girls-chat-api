@@ -13,6 +13,12 @@ export default class ChatsService {
                 .orWhere('participant', userID)
                 .preload('host')
                 .preload('participantUser')
+                .preload('messages', (messagesQuery) => {
+                    messagesQuery
+                        .where((query) => {
+                            query.where('seen', false).whereNot('sentTo', userID)
+                        })
+                })
                 .orderBy('last_message_at', 'desc');
 
             return chats;

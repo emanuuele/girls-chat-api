@@ -45,7 +45,7 @@ export default class MessagesService {
         }
     }
 
-    public async updateMessageSeenStatus(chatID: string) {
+    public async updateMessageSeenStatus(chatID: string, loggedUserID: string) {
         try {
             if (!chatID) {
                 throw new Error("O ID do chat é obrigatório");
@@ -54,7 +54,7 @@ export default class MessagesService {
             if (!chat) {
                 throw new Error("Chat não encontrado");
             }
-            await Message.query().where('id_chat', chatID).update({ seen: true });
+            await Message.query().where('id_chat', chatID).whereNot('sentBy', loggedUserID).update({ seen: true });
         } catch (error) {
             throw new Error("Erro ao atualizar status das mensagens: " + error.message);
         }
