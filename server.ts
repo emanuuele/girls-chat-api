@@ -20,5 +20,5 @@ new Ignitor(__dirname)
   .httpServer()
   .start()
   .finally(() => {
-    import("./start/ws")
+    import("./start/ws.js")
   })
