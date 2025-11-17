@@ -13,12 +13,24 @@
 import 'reflect-metadata'
 import sourceMapSupport from 'source-map-support'
 import { Ignitor } from '@adonisjs/core/build/standalone'
+import path from 'path'
+import fs from 'fs'
 
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
-new Ignitor(__dirname)
-  .httpServer()
-  .start()
-  .finally(() => {
-    import("./start/ws.js")
-  })
+const source = path.resolve(__dirname, '../firebase-service-account.json');
+const destination = path.resolve(__dirname, '../build/firebase-service-account.json');
+
+fs.copyFile(source, destination, (err) => {
+  if (err) {
+    console.error("Erro ao copiar o arquivo de conta de serviço do Firebase:", err);
+  }
+  else {
+    new Ignitor(__dirname)
+      .httpServer()
+      .start()
+      .finally(() => {
+        import("./start/ws.js")
+      });
+  }
+});
