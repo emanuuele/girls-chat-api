@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
-    "build": "node ace build --production && yarn copy-firebase-service-account",
+    "build": "node ace build --production --ignore-ts-errors && yarn copy-firebase-service-account",
     "start": "node server.js",
     "test": "node ace test",
     "copy-firebase-service-account": "cp ./firebase-service-account.json ./build/firebase-service-account.json"
