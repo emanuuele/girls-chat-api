@@ -105,11 +105,11 @@ export default class UserService {
             if (!metadata || !metadata.publicUrl()) {
                 throw new Error("Falha ao fazer upload da imagem");
             }
-            console.log(metadata);
+            console.log("chegou aqui");
             await metadata.makePublic()
             user.profile_picture = metadata.publicUrl();
             await user.save();
-            console.log(user);
+            console.log("chegou aquiii");
             return user;
         } catch (error) {
             throw new Error("Erro ao salvar imagem de perfil: " + error.message);
