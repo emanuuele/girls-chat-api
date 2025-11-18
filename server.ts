@@ -30,6 +30,7 @@ fs.copyFile(source, destination, (err) => {
       .httpServer()
       .start()
       .finally(() => {
+        console.log("🔥 Servidor inicializado!");
         import("./start/ws.js")
       });
   }
