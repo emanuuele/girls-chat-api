@@ -116,6 +116,8 @@ export default class UserService {
 
     public async saveProfilePictureGoogleStorage(file: MultipartFileContract, filename: string) {
         try {
+            console.log("cheguei naqui");
+            
             const storage = FirebaseAdminService.getStorage();
             const defaultBucket = storage.bucket();
             const [uploadedFile] = await defaultBucket.upload(file.tmpPath!, {
