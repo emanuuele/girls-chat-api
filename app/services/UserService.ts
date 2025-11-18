@@ -105,9 +105,11 @@ export default class UserService {
             if (!metadata || !metadata.publicUrl()) {
                 throw new Error("Falha ao fazer upload da imagem");
             }
+            console.log(metadata);
             await metadata.makePublic()
             user.profile_picture = metadata.publicUrl();
             await user.save();
+            console.log(user);
             return user;
         } catch (error) {
             throw new Error("Erro ao salvar imagem de perfil: " + error.message);
@@ -125,7 +127,6 @@ export default class UserService {
                     contentType: file.type,
                 },
             });
-            console.log(file);
             return uploadedFile;
         } catch (error) {
             throw new Error("Erro ao salvar imagem de perfil no Google Storage: " + error.message);
