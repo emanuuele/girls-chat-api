@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production --ignore-ts-errors",
-    "start": "node server.js",
+    "start": "node build/server.js",
     "test": "node ace test",
     "copy-firebase-service-account": "cp ./firebase-service-account.json ./build/firebase-service-account.json"
   },
