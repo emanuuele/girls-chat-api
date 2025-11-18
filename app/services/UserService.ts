@@ -125,7 +125,7 @@ export default class UserService {
                     contentType: file.type,
                 },
             });
-            console.log("cheguei naqui");
+            console.log(uploadedFile);
             return uploadedFile;
         } catch (error) {
             throw new Error("Erro ao salvar imagem de perfil no Google Storage: " + error.message);
