@@ -116,7 +116,6 @@ export default class UserService {
 
     public async saveProfilePictureGoogleStorage(file: MultipartFileContract, filename: string) {
         try {
-            console.log("cheguei naqui");
             
             const storage = FirebaseAdminService.getStorage();
             const defaultBucket = storage.bucket();
@@ -126,6 +125,7 @@ export default class UserService {
                     contentType: file.type,
                 },
             });
+            console.log("cheguei naqui");
             return uploadedFile;
         } catch (error) {
             throw new Error("Erro ao salvar imagem de perfil no Google Storage: " + error.message);
