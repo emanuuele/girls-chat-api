@@ -18,20 +18,19 @@ import fs from 'fs'
 
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
-const source = path.resolve(__dirname, '../firebase-service-account.json');
-const destination = path.resolve(__dirname, '../build/firebase-service-account.json');
+const source = path.resolve(__dirname, './firebase-service-account.json');
+const destination = path.resolve(__dirname, './build/firebase-service-account.json');
 
 fs.copyFile(source, destination, (err) => {
   if (err) {
-    console.error("Erro ao copiar o arquivo de conta de serviço do Firebase:", err);
+    console.warn("Arquivo Firebase não encontrado em " + source + " (isso é ok em ambiente de portfolio)");
   }
-  else {
-    new Ignitor(__dirname)
-      .httpServer()
-      .start()
-      .finally(() => {
-        console.log("🔥 Servidor inicializado!");
-        import("./start/ws.js")
-      });
-  }
-});
+})
+
+new Ignitor(__dirname)
+  .httpServer()
+  .start()
+  .finally(() => {
+    import("./start/ws.js")
+    console.log("🔥 Servidor inicializado!");
+  })

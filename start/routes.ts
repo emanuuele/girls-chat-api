@@ -22,6 +22,7 @@ import Route from '@ioc:Adonis/Core/Route'
 import ChatsController from 'App/Controllers/Http/ChatsController'
 import MessagesController from 'App/Controllers/Http/MessagesController'
 import UsersController from 'App/Controllers/Http/UsersController'
+import PortfolioChatController from 'App/Controllers/Http/PortfolioChatController'
 
 // Rota básica para testes
 Route.get('/', async () => {
@@ -38,6 +39,21 @@ Route.get('/debug/users', async () => {
 const usersController = new UsersController()
 const chatsController = new ChatsController()
 const messagesController = new MessagesController()
+const portfolioChatController = new PortfolioChatController()
+
+// ========================== ROTAS DO PORTFÓLIO ==========================
+
+// SEM AUTENTICAÇÃO
+Route.get('/portfolio-chat/init', (ctx) => portfolioChatController.init(ctx))
+
+// COM AUTENTICAÇÃO
+Route.group(() => {
+  Route.get('/portfolio-chat/messages', (ctx) => portfolioChatController.messages(ctx))
+  Route.post('/portfolio-chat/messages/send', (ctx) => portfolioChatController.send(ctx))
+}).middleware('authToken')
+
+// ========================== ROTAS DA MOBILE APP ==========================
+
 
 Route.post('/criar-usuario', (ctx) => usersController.signUp(ctx))
 Route.post('/login', (ctx) => usersController.login(ctx))
@@ -52,6 +68,7 @@ Route.get('/mensagens', (ctx) => messagesController.index(ctx))
 Route.post('/criar-mensagem', (ctx) => messagesController.create(ctx))
 Route.put('/chat/:id/atualizar-status-visto', (ctx) => messagesController.updateSeenStatus(ctx))
 
+// Rotas com middleware expoPushNotification (mantidas para compatibilidade)
 Route.group(() => {
   Route.get('/chats', (ctx) => chatsController.index(ctx))
 }).middleware('expoPushNotification')

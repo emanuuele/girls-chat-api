@@ -24,8 +24,11 @@ export default class User extends BaseModel {
   @column()
   public profile_picture: string
 
-  @column.dateTime()
-  public lastLogin: DateTime
+  @column()
+  public auth_token: string
+
+  @column()
+  public device_id: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
