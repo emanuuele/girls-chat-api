@@ -64,10 +64,14 @@ export default class PortfolioChatController {
   public async messages({ request, response, params }: HttpContextContract) {
     try {
       const user = (request as any).user
-      const chatId = (request as any).chatId
+      const chatId = params.chatId;
 
       if (!user) {
         throw new Error('Usuário não autenticado')
+      }
+
+      if (!chatId) {
+        throw new Error('Chat ID é obrigatório')
       }
 
       // Buscar chat do usuário
@@ -115,6 +119,10 @@ export default class PortfolioChatController {
 
       if (!text) {
         throw new Error('Texto é obrigatório')
+      }
+
+      if (!chatId) {
+        throw new Error('Chat ID é obrigatório')
       }
 
       // Buscar ou criar chat do usuário
