@@ -133,12 +133,11 @@ export default class PortfolioChatController {
         id_chat: chat.id,
         text,
         sentBy: user.id,
-        sentTo: sentTo || chat.id_host,
+        sentTo: 55,
         seen: false
       })
 
       await message.load('sender')
-      await message.load('receiver')
 
       return response.json({
         success: true,
