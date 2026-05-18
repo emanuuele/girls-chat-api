@@ -48,7 +48,7 @@ Route.get('/portfolio-chat/init', (ctx) => portfolioChatController.init(ctx))
 
 // COM AUTENTICAÇÃO
 Route.group(() => {
-  Route.get('/portfolio-chat/messages', (ctx) => portfolioChatController.messages(ctx))
+  Route.get('/portfolio-chat/messages/:chatId', (ctx) => portfolioChatController.messages(ctx))
   Route.post('/portfolio-chat/messages/send', (ctx) => portfolioChatController.send(ctx))
 }).middleware('authToken')
 
@@ -68,7 +68,6 @@ Route.get('/mensagens', (ctx) => messagesController.index(ctx))
 Route.post('/criar-mensagem', (ctx) => messagesController.create(ctx))
 Route.put('/chat/:id/atualizar-status-visto', (ctx) => messagesController.updateSeenStatus(ctx))
 
-// Rotas com middleware expoPushNotification (mantidas para compatibilidade)
 Route.group(() => {
   Route.get('/chats', (ctx) => chatsController.index(ctx))
 }).middleware('expoPushNotification')
