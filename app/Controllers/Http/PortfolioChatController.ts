@@ -122,9 +122,7 @@ export default class PortfolioChatController {
         .first()
 
       if (!chat) {
-        chat = await Chat.create({
-          id_host: user.id
-        })
+        chat = await this.chatsService.createChat(user.id, '55')
       } else {
         // Atualizar última mensagem usando o serviço
         await this.chatsService.updateLastMessage(chat.id, text)
