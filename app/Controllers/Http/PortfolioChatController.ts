@@ -64,7 +64,7 @@ export default class PortfolioChatController {
   public async messages({ request, response, params }: HttpContextContract) {
     try {
       const user = (request as any).user
-      const chatId = params.chatId;
+      const chatId = request.param('chatId');
 
       if (!user) {
         throw new Error('Usuário não autenticado')
