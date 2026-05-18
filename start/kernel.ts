@@ -41,5 +41,6 @@ Server.middleware.register([
 |
 */
 Server.middleware.registerNamed({
+  authToken: () => import('App/Middleware/AuthToken'),
   expoPushNotification: () => import('App/Middleware/ExpoPushNotification')
 })
