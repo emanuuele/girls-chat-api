@@ -61,9 +61,10 @@ export default class PortfolioChatController {
   /**
    * Lista mensagens do chat do usuário
    */
-  public async messages({ request, response }: HttpContextContract) {
+  public async messages({ request, response, params }: HttpContextContract) {
     try {
       const user = (request as any).user
+      const chatId = (request as any).chatId
 
       if (!user) {
         throw new Error('Usuário não autenticado')
@@ -71,8 +72,8 @@ export default class PortfolioChatController {
 
       // Buscar chat do usuário
       const chat = await Chat.query()
-        .where('id_host', user.id)
-        .first()
+        .where('id', chatId)
+        .first();
 
       if (!chat) {
         // Se não tiver chat, retorna lista vazia
@@ -106,7 +107,7 @@ export default class PortfolioChatController {
   public async send({ request, response }: HttpContextContract) {
     try {
       const user = (request as any).user
-      const { text, sentTo } = request.body()
+      const { text, chatId } = request.body()
 
       if (!user) {
         throw new Error('Usuário não autenticado')
@@ -118,7 +119,7 @@ export default class PortfolioChatController {
 
       // Buscar ou criar chat do usuário
       let chat = await Chat.query()
-        .where('id_host', user.id)
+        .where('id', chatId)
         .first()
 
       if (!chat) {
