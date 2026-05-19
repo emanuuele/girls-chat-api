@@ -3,6 +3,7 @@ import AuthService from '../../services/AuthService'
 import ChatsService from '../../services/ChatsService'
 import Chat from 'App/Models/Chat'
 import Message from 'App/Models/Message'
+import Participant from 'App/Models/Participant'
 
 export default class PortfolioChatController {
   private authService: AuthService
@@ -35,6 +36,16 @@ export default class PortfolioChatController {
       if (!chat) {
         chat = await Chat.create({
           id_host: user.id,
+        })
+        
+        // Criar Participant para vincular o usuário ao chat
+        await Participant.create({
+          id_chat: chat.id,
+          id_user: user.id,
+        })
+        await Participant.create({
+          id_chat: chat.id,
+          id_user: 55, // ID do participante fixo (ex: suporte)
         })
       }
 
