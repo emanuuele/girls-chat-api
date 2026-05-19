@@ -4,6 +4,7 @@ import ChatsService from '../../services/ChatsService'
 import Chat from 'App/Models/Chat'
 import Message from 'App/Models/Message'
 import Participant from 'App/Models/Participant'
+import Ws from "../../services/IoSocketServer";
 
 export default class PortfolioChatController {
   private authService: AuthService
@@ -158,6 +159,8 @@ export default class PortfolioChatController {
       })
 
       await message.load('sender')
+
+      Ws.emitNewMessage(chat.id, message)
 
       return response.json({
         success: true,
