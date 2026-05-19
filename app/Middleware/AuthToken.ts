@@ -9,9 +9,10 @@ export default class AuthToken {
       
       if (!authHeader) {
         // Se não houver token, retorna erro
+        console.log('[AuthToken] Token não fornecido')
         return response.status(401).json({
           success: false,
-          message: 'Token não fornecido. Use GET /init-chat para obter um token.'
+          message: 'Token não fornecido. Use GET /portfolio-chat/init para obter um token.'
         })
       }
 
@@ -19,6 +20,7 @@ export default class AuthToken {
       const token = authHeader.replace(/^Bearer\s+/i, '')
       
       if (!token) {
+        console.log('[AuthToken] Token vazio após remoção de Bearer')
         return response.status(401).json({
           success: false,
           message: 'Token inválido'
@@ -34,9 +36,11 @@ export default class AuthToken {
 
       await next()
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Token inválido'
+      console.log('[AuthToken] Erro na validação:', errorMessage)
       return response.status(401).json({
         success: false,
-        message: error instanceof Error ? error.message : 'Token inválido'
+        message: errorMessage
       })
     }
   }
