@@ -2,7 +2,7 @@ import { test } from "@japa/runner";
 test.group("Criar Usuário", (group) => {
   test("post /criar-usuario", async ({ client }) => {
     const userData = {
-      email: "usuario@example.com",
+      email: "ana@uau.com",
       password: "senha123",
       name: "Usuário Teste"
     };
