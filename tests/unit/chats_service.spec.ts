@@ -42,11 +42,10 @@ test.group('ChatsService', (group) => {
 
     assert.exists(newChat.id)
     assert.equal(newChat.id_host, user1.id)
-    assert.equal(newChat.participant, user2.id)
     assert.exists(newChat.host)
-    assert.exists(newChat.participantUser)
     assert.equal(newChat.host.name, 'User One')
-    assert.equal(newChat.participantUser.name, 'User Two')
+    assert.lengthOf(newChat.participants, 2)
+    assert.includeMembers(newChat.participants.map((participant) => participant.id), [user1.id, user2.id])
   })
 
   test('deve falhar ao tentar criar chat duplicado', async ({ assert }) => {
@@ -93,12 +92,10 @@ test.group('ChatsService', (group) => {
 
   test('deve buscar chats de um usuário', async ({ assert }) => {
     // Criar alguns chats
-    const chat1 = await Chat.create({
-      id_host: user1.id,
-      participant: user2.id,
-      last_message: 'Primeira mensagem',
-      last_message_at: DateTime.now()
-    })
+    const chat1 = await chatsService.createChat(user1.id.toString(), user2.id.toString())
+    chat1.last_message = 'Primeira mensagem'
+    chat1.last_message_at = DateTime.now()
+    await chat1.save()
 
     const user3 = await User.create({
       email: 'user3@test.com',
@@ -106,12 +103,10 @@ test.group('ChatsService', (group) => {
       name: 'User Three'
     })
 
-    const chat2 = await Chat.create({
-      id_host: user3.id,
-      participant: user1.id,
-      last_message: 'Segunda mensagem',
-      last_message_at: DateTime.now()
-    })
+    const chat2 = await chatsService.createChat(user3.id.toString(), user1.id.toString())
+    chat2.last_message = 'Segunda mensagem'
+    chat2.last_message_at = DateTime.now()
+    await chat2.save()
 
     const userChats = await chatsService.getUserChats(user1.id.toString())
 
@@ -126,12 +121,10 @@ test.group('ChatsService', (group) => {
 
   test('deve buscar um chat específico com mensagens', async ({ assert }) => {
     // Criar chat
-    chat = await Chat.create({
-      id_host: user1.id,
-      participant: user2.id,
-      last_message: 'Mensagem de teste',
-      last_message_at: DateTime.now()
-    })
+    chat = await chatsService.createChat(user1.id.toString(), user2.id.toString())
+    chat.last_message = 'Mensagem de teste'
+    chat.last_message_at = DateTime.now()
+    await chat.save()
 
     // Criar algumas mensagens
     await Message.create({
@@ -157,7 +150,7 @@ test.group('ChatsService', (group) => {
     assert.exists(foundChat.messages)
     assert.lengthOf(foundChat.messages, 2)
     assert.exists(foundChat.host)
-    assert.exists(foundChat.participantUser)
+    assert.lengthOf(foundChat.participants, 2)
     
     // Verificar se as mensagens têm os relacionamentos carregados
     assert.exists(foundChat.messages[0].sender)

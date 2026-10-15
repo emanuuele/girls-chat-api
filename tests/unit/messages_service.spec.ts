@@ -5,6 +5,7 @@ import User from 'App/Models/User'
 import Chat from 'App/Models/Chat'
 import Message from 'App/Models/Message'
 import MessagesService from 'App/services/MessagesService'
+import ChatsService from 'App/services/ChatsService'
 
 test.group('MessagesService', (group) => {
   let messagesService: MessagesService
@@ -33,12 +34,10 @@ test.group('MessagesService', (group) => {
     })
 
     // Criar chat de teste
-    chat = await Chat.create({
-      id_host: user1.id,
-      participant: user2.id,
-      last_message: 'Initial message',
-      last_message_at: DateTime.now()
-    })
+    chat = await new ChatsService().createChat(user1.id.toString(), user2.id.toString())
+    chat.last_message = 'Initial message'
+    chat.last_message_at = DateTime.now()
+    await chat.save()
   })
 
   group.each.teardown(async () => {
@@ -90,7 +89,7 @@ test.group('MessagesService', (group) => {
       text: 'Nova mensagem de teste'
     }
 
-    const newMessage = await messagesService.createMessage(chat.id, messageData)
+    const newMessage = await messagesService.createMessage(messageData)
 
     assert.exists(newMessage.id)
     assert.equal(newMessage.id_chat, chat.id)
@@ -113,7 +112,7 @@ test.group('MessagesService', (group) => {
       text: 'Primeira mensagem entre esses usuários'
     }
 
-    const newMessage = await messagesService.createMessage(0, messageData)
+    const newMessage = await messagesService.createMessage(messageData)
 
     assert.exists(newMessage.id)
     assert.exists(newMessage.id_chat)
@@ -129,7 +128,7 @@ test.group('MessagesService', (group) => {
   test('deve falhar ao criar mensagem sem campos obrigatórios', async ({ assert }) => {
     // Teste sem sentBy
     try {
-      await messagesService.createMessage(chat.id, {
+      await messagesService.createMessage({
         sentBy: '',
         sentTo: user2.id.toString(),
         text: 'Teste'
@@ -141,7 +140,7 @@ test.group('MessagesService', (group) => {
 
     // Teste sem sentTo
     try {
-      await messagesService.createMessage(chat.id, {
+      await messagesService.createMessage({
         sentBy: user1.id.toString(),
         sentTo: '',
         text: 'Teste'
@@ -153,7 +152,7 @@ test.group('MessagesService', (group) => {
 
     // Teste sem text
     try {
-      await messagesService.createMessage(chat.id, {
+      await messagesService.createMessage({
         sentBy: user1.id.toString(),
         sentTo: user2.id.toString(),
         text: ''
@@ -182,7 +181,7 @@ test.group('MessagesService', (group) => {
       sentTo: user2.id
     })
 
-    await messagesService.updateMessageSeenStatus(chat.id.toString())
+    await messagesService.updateMessageSeenStatus(chat.id.toString(), user2.id.toString())
 
     // Verificar se todas as mensagens foram marcadas como vistas
     const messages = await Message.query().where('id_chat', chat.id)
@@ -193,7 +192,7 @@ test.group('MessagesService', (group) => {
 
   test('deve falhar ao atualizar status sem ID do chat', async ({ assert }) => {
     try {
-      await messagesService.updateMessageSeenStatus('')
+      await messagesService.updateMessageSeenStatus('', user2.id.toString())
       assert.fail('Deveria ter lançado erro para chatID vazio')
     } catch (error) {
       assert.include(error.message, 'O ID do chat é obrigatório')
@@ -202,7 +201,7 @@ test.group('MessagesService', (group) => {
 
   test('deve falhar ao atualizar status de chat inexistente', async ({ assert }) => {
     try {
-      await messagesService.updateMessageSeenStatus('999999')
+      await messagesService.updateMessageSeenStatus('999999', user2.id.toString())
       assert.fail('Deveria ter lançado erro para chat inexistente')
     } catch (error) {
       assert.include(error.message, 'Chat não encontrado')

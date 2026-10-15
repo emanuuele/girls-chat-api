@@ -6,7 +6,7 @@ import Application from '@ioc:Adonis/Core/Application'
 export class FirebaseAdminService {
   public static init() {
     if (!admin.apps.length) {
-      const serviceAccountPath = Application.makePath('config', '../../firebase-service-account.json')
+      const serviceAccountPath = Application.makePath('config', '../firebase-service-account.json')
       const serviceAccount = require(serviceAccountPath)
 
       admin.initializeApp({

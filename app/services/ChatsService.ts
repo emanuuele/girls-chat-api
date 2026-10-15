@@ -66,6 +66,8 @@ export default class ChatsService {
             }
             const chat = await Chat.query()
                 .where('id', chatID)
+                .preload('host')
+                .preload('participants')
                 .preload('messages', (messagesQuery) => {
                     messagesQuery
                         .preload('sender')
@@ -81,7 +83,8 @@ export default class ChatsService {
                     .where('id_chat', chat.id)
                     .andWhere((query) => {
                         query.whereNot('id_user', userLoggedID)
-                    });
+                    })
+                    .preload('user');
                 return { ...chat.toJSON(), participant: participants.map(p => p.user)};
             }
             return chat;
@@ -126,6 +129,7 @@ export default class ChatsService {
                 id_user: parseInt(participant),
             });
             await newChat.load('host');
+            await newChat.load('participants');
             return newChat;
         } catch (error) {
             throw new Error("Erro ao criar o chat: " + error.message);

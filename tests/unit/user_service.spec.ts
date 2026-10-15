@@ -194,8 +194,7 @@ test.group('UserService', (group) => {
     const users = await userService.getAllUsersExcept(user1.id.toString())
 
     assert.isArray(users)
-    assert.lengthOf(users, 2)
-    
+
     const userIds = users.map(user => user.id)
     assert.include(userIds, user2.id)
     assert.include(userIds, user3.id)

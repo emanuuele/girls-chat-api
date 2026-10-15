@@ -18,8 +18,8 @@ import fs from 'fs'
 
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
-const source = path.resolve(__dirname, './firebase-service-account.json');
-const destination = path.resolve(__dirname, './build/firebase-service-account.json');
+const source = path.resolve(__dirname, '../firebase-service-account.json');
+const destination = path.resolve(__dirname, '../build/firebase-service-account.json');
 
 fs.copyFile(source, destination, (err) => {
   if (err) {
@@ -31,6 +31,6 @@ new Ignitor(__dirname)
   .httpServer()
   .start()
   .finally(() => {
-    import("./start/ws.js")
+    // import("./start/ws.js")
     console.log("🔥 Servidor inicializado!");
   })
