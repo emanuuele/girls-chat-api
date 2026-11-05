@@ -40,6 +40,13 @@
           "tests/functional/**/*.spec(.ts|.js)"
         ],
         "timeout": 60000
+      },
+      {
+        "name": "frameworks",
+        "files": [
+          "tests/frameworks/japa/**/*.spec(.ts|.js)"
+        ],
+        "timeout": 60000
       }
     ]
   },

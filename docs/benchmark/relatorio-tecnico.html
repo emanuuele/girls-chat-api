@@ -1,0 +1,335 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Relatório técnico: frameworks de teste unitário</title>
+<style>
+@page { size: A4; margin: 22mm 20mm 20mm 20mm; }
+body { font-family: "Liberation Serif", "Times New Roman", serif; font-size: 11.5pt; line-height: 1.5; color: #1d1c1a; background: #fff; }
+h1, h2, h3, h4, figcaption, th, .cover { font-family: "Liberation Sans", Arial, sans-serif; }
+h2 { font-size: 15pt; margin: 22px 0 8px; border-bottom: 1px solid #ccc; padding-bottom: 3px; break-after: avoid; }
+h3 { font-size: 12.5pt; margin: 16px 0 6px; break-after: avoid; }
+h4 { font-size: 11pt; margin: 10px 0 2px; break-after: avoid; }
+p { text-align: justify; margin: 6px 0; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: 10pt; break-inside: avoid; }
+th { background: #2f4858; color: #fff; font-weight: 600; padding: 5px 6px; text-align: left; }
+td { border-bottom: 1px solid #ddd; padding: 4px 6px; vertical-align: top; }
+td.c, th.c { text-align: center; }
+figure { margin: 10px 0 14px; break-inside: avoid; }
+figcaption { font-size: 10pt; font-weight: 600; color: #52514e; margin-bottom: 4px; }
+pre { font-family: "Liberation Mono", monospace; font-size: 7.6pt; line-height: 1.3; background: #f6f5f2; border: 1px solid #e2e0da; padding: 8px; white-space: pre-wrap; break-inside: avoid; }
+code { font-family: "Liberation Mono", monospace; font-size: 9.5pt; background: #f2f1ed; padding: 0 3px; }
+ul { margin: 4px 0 8px; } li { margin: 2px 0; text-align: justify; }
+.cover { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; text-align: center; break-after: page; }
+.cover .top { font-size: 12pt; letter-spacing: .5px; color: #3a3935; }
+.cover h1 { font-size: 24pt; margin: 0 0 8px; }
+.cover .sub { font-size: 14pt; color: #52514e; }
+.cover .team { font-size: 11.5pt; line-height: 1.8; }
+.note { font-size: 9.5pt; color: #52514e; }
+.legend { font-family: Arial, sans-serif; font-size: 9.5pt; color: #52514e; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin: 0 4px 0 10px; vertical-align: middle; }
+.toc li { list-style: none; }
+</style></head><body>
+
+<section class="cover">
+  <div class="top">DISCIPLINA DE QUALIDADE DE SOFTWARE<br>Especificação de Projeto em Grupo, Grupo 01</div>
+  <div><h1>Frameworks de Teste Unitário</h1>
+  <div class="sub">Estudo comparativo (benchmarking) entre Japa, Jest e Vitest<br>aplicado à API <i>girls-chat-api</i> (AdonisJS 5 + TypeScript)</div></div>
+  <div class="team"><b>Equipe</b><br>Ana Alícia<br>Emanuele Maria<br>Fábio Henrique<br>Joserlan Gonçalves<br>Joel Fentes<br><br>
+  <b>Professora responsável:</b> Profa. Carol Melo<br>Novembro de 2026</div>
+</section>
+
+<h2>Sumário</h2>
+<ol class="toc"><li>1. Introdução</li><li>2. Fundamentação</li><li>3. Metodologia</li><li>4. Resultados quantitativos</li><li>5. Resultados qualitativos</li><li>6. Tabela comparativa consolidada</li><li>7. Análise crítica e recomendações</li><li>8. Limitações do estudo</li><li>9. Conclusão</li><li>Referências e Apêndice</li></ol>
+
+<h2>1. Introdução</h2>
+<p>O teste unitário verifica isoladamente o comportamento de pequenas unidades de código (funções, métodos e classes), permitindo detectar defeitos cedo e sustentar refatorações seguras. A escolha do framework de teste afeta a produtividade da equipe, a legibilidade dos testes, a manutenção e a integração com pipelines de integração contínua.</p>
+<p>Este relatório compara três frameworks de teste unitário do ecossistema JavaScript/TypeScript (<b>Japa</b>, <b>Jest</b> e <b>Vitest</b>) a partir da implementação do <b>mesmo conjunto de 12 casos de teste</b> sobre o mesmo sistema-alvo: os serviços de domínio da <i>girls-chat-api</i>, uma API de chat em AdonisJS 5. A escolha permanece em uma única linguagem para uma comparação mais justa. O Japa é o runner oficial do AdonisJS, o Jest é o padrão de mercado e o Vitest é a alternativa moderna baseada no Vite.</p>
+
+<h2>2. Fundamentação</h2>
+<h3>2.1 Teste unitário, padrão AAA e princípios FIRST</h3>
+<p>O padrão <b>AAA (Arrange–Act–Assert)</b> organiza cada teste em três blocos: preparar o cenário (dados e dublês), executar a ação sob teste e verificar o resultado. Todos os testes deste estudo seguem o AAA, separando visualmente os blocos por linhas em branco.</p>
+<p>Os princípios <b>FIRST</b> descrevem bons testes unitários: <b>Fast</b> (rápidos, em milissegundos), <b>Independent</b> (sem dependência de ordem ou de estado compartilhado), <b>Repeatable</b> (mesmo resultado em qualquer ambiente), <b>Self-validating</b> (passam ou falham sem inspeção manual) e <b>Timely</b> (escritos junto com o código). Para atender ao <i>Fast</i>, ao <i>Independent</i> e ao <i>Repeatable</i>, os testes deste estudo <b>não acessam banco de dados</b>: os models do ORM Lucid são substituídos por dublês, e os dublês são restaurados ou resetados antes de cada teste.</p>
+<h3>2.2 Características declaradas pelos frameworks</h3>
+<table><tr><th>Recurso</th><th>Japa 2 (@japa/runner)</th><th>Jest 30</th><th>Vitest 5</th></tr>
+<tr><td>Mocking</td><td>Não embutido; recomenda bibliotecas externas (ex.: Sinon)</td><td>jest.fn, jest.mock (módulos), spyOn, timers falsos</td><td>vi.fn, vi.mock (módulos), spyOn, timers falsos</td></tr>
+<tr><td>Parametrização</td><td><code>test(...).with([...])</code> (datasets)</td><td><code>test.each</code></td><td><code>test.each</code> / <code>test.for</code></td></tr>
+<tr><td>Relatórios</td><td>spec reporter; plugins de terceiros</td><td>default, verbose, JUnit (pacote externo), personalizados</td><td>default, verbose, JUnit, JSON, HTML, github-actions</td></tr>
+<tr><td>Cobertura</td><td>Externa (c8/nyc)</td><td>Embutida (Istanbul ou V8)</td><td>Pacote oficial (@vitest/coverage-v8 ou istanbul)</td></tr>
+<tr><td>TypeScript</td><td>Via require-ts do Adonis</td><td>ts-jest, Babel ou SWC</td><td>Nativo (esbuild/Vite)</td></tr>
+<tr><td>Diferencial</td><td>Integração com o Adonis (IoC, cliente HTTP, banco)</td><td>Ecossistema, snapshots, maturidade</td><td>Velocidade, API compatível com Jest, ESM</td></tr></table>
+
+<h2>3. Metodologia</h2>
+<h3>3.1 Sistema-alvo</h3>
+<p>Foram escolhidos os serviços <code>ChatsService</code> e <code>UserService</code> da API, que concentram regras de negócio não triviais: criação de chat apenas entre usuários existentes e sem chat duplicado (em qualquer ordem dos participantes), busca do chat em comum entre dois usuários, atualização da última mensagem, controle de participantes (sem duplicidade) e cadastro de usuário com validação de e-mail, unicidade de e-mail e senha armazenada como hash MD5. O código de produção <b>não foi alterado</b>.</p>
+<h3>3.2 Casos de teste</h3>
+<p>Os 12 casos abaixo (5 de sucesso e 7 de falha/exceção) foram implementados com o mesmo nome, os mesmos dados e as mesmas asserções nos três frameworks. Os dublês (query builder falso, usuários, chats e participantes) ficam em um módulo independente de framework (<code>tests/frameworks/shared/fakes.ts</code>), e cada framework usa o próprio mecanismo para injetá-los: <code>sinon.stub</code> no Japa, <code>jest.mock</code> no Jest e <code>vi.mock</code> no Vitest.</p>
+<table><tr><th>#</th><th>Caso de teste</th><th>Tipo</th></tr>
+<tr><td>1</td><td>ChatsService: cria chat entre dois usuários com host e dois participantes</td><td>Sucesso</td></tr><tr><td>2</td><td>ChatsService: falha ao criar chat sem os IDs obrigatórios</td><td>Exceção</td></tr><tr><td>3</td><td>ChatsService: falha ao criar chat quando o host não existe</td><td>Exceção</td></tr><tr><td>4</td><td>ChatsService: falha ao criar chat duplicado entre os mesmos usuários</td><td>Exceção</td></tr><tr><td>5</td><td>ChatsService: encontra o chat em comum entre dois usuários</td><td>Sucesso</td></tr><tr><td>6</td><td>ChatsService: atualiza a última mensagem e a data do chat</td><td>Sucesso</td></tr><tr><td>7</td><td>ChatsService: falha ao atualizar a última mensagem de chat inexistente</td><td>Exceção</td></tr><tr><td>8</td><td>ChatsService: falha ao adicionar usuário que já participa do chat</td><td>Exceção</td></tr><tr><td>9</td><td>ChatsService: remove participante existente do chat</td><td>Sucesso</td></tr><tr><td>10</td><td>UserService: cria usuário armazenando a senha com hash MD5</td><td>Sucesso</td></tr><tr><td>11</td><td>UserService: falha ao criar usuário com e-mail inválido</td><td>Exceção</td></tr><tr><td>12</td><td>UserService: falha ao criar usuário com e-mail já cadastrado</td><td>Exceção</td></tr></table>
+<p class="note">Os casos de exceção também verificam efeitos colaterais: nos testes 2, 4, 8, 11 e 12 confere-se que nenhum registro foi criado ou consultado indevidamente. Organização no repositório: <code>tests/frameworks/japa</code>, <code>tests/frameworks/jest</code> e <code>tests/frameworks/vitest</code> (branch <code>benchmark/frameworks-teste-unitario</code>).</p>
+<h3>3.3 Métricas e método de medição</h3>
+<ul>
+<li><b>Tempo de execução:</b> o script <code>scripts/benchmark/run-benchmark.js</code> executa, para cada framework, 1 rodada de aquecimento (descartada) e <b>5 execuções consecutivas</b> da suíte. Registra o <i>tempo de parede</i> do processo (do spawn ao término, com <code>process.hrtime</code>) e o <i>tempo interno</i> relatado pelo framework. O script aborta se alguma execução não rodar exatamente 12 testes.</li>
+<li><b>Volume de código:</b> o script <code>scripts/benchmark/count-loc.js</code> conta as linhas excluindo brancos e comentários.</li>
+<li><b>Cobertura:</b> provedor V8 nos três (c8 no Japa, <code>coverageProvider: 'v8'</code> no Jest e @vitest/coverage-v8 no Vitest), sobre <code>ChatsService.ts</code> e <code>UserService.ts</code>.</li>
+<li><b>Esforço de configuração:</b> número de passos e de linhas de configuração para sair de um projeto sem testes até rodar testes com cobertura.</li>
+<li><b>Outros indicadores:</b> número de dependências transitivas e tamanho em disco de uma instalação limpa dos pacotes de cada framework.</li>
+</ul>
+<p class="note">Ambiente: Linux 6.18.44-fc-v236 (x64), Intel(R) Xeon(R) Processor @ 2.30GHz (4 vCPUs), 15.7 GB de RAM, Node.js v22.23.4. Versões: @japa/runner 2.5.1 + Sinon 22.1.0 + c8 12.0.0; Jest 30.5.2 + ts-jest 29.4.15; Vitest 5.0.5; TypeScript 4.6.4. Medição em 05/11/2026.</p>
+
+<h2>4. Resultados quantitativos</h2>
+<h3>4.1 Tempo de execução</h3>
+<table><tr><th>Framework</th><th class="c">#1</th><th class="c">#2</th><th class="c">#3</th><th class="c">#4</th><th class="c">#5</th><th>Média (ms)</th><th>Desvio (ms)</th><th>Interno (ms)</th></tr><tr><td>Japa</td><td>1.018,6</td><td>1.070,3</td><td>920,2</td><td>958,7</td><td>915,7</td><td><b>976,7</b></td><td>66,6</td><td>38,6</td></tr><tr><td>Jest</td><td>544,5</td><td>606,1</td><td>669,0</td><td>677,1</td><td>650,9</td><td><b>629,5</b></td><td>54,9</td><td>342,8</td></tr><tr><td>Vitest</td><td>483,0</td><td>377,2</td><td>370,7</td><td>414,7</td><td>397,9</td><td><b>408,7</b></td><td>45,0</td><td>168,6</td></tr></table>
+<figure><figcaption>Tempo médio de parede para executar os 12 testes (menor é melhor)</figcaption>
+    <svg viewBox="0 0 640 132" width="100%" role="img" aria-label="Tempo médio de parede para executar os 12 testes (menor é melhor)"><line x1="70" y1="8" x2="70" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="70" y="126" font-size="10" fill="#77766f" text-anchor="middle">0</text><line x1="185" y1="8" x2="185" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="185" y="126" font-size="10" fill="#77766f" text-anchor="middle">250</text><line x1="300" y1="8" x2="300" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="300" y="126" font-size="10" fill="#77766f" text-anchor="middle">500</text><line x1="415" y1="8" x2="415" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="415" y="126" font-size="10" fill="#77766f" text-anchor="middle">750</text><line x1="530" y1="8" x2="530" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="530" y="126" font-size="10" fill="#77766f" text-anchor="middle">1.000</text><text x="60" y="29" font-size="12" fill="#2b2a27" text-anchor="end">Japa</text>
+      <path d="M70,14 h445.282 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-445.282 z" fill="#2a78d6"/>
+      <text x="527.2819999999999" y="29" font-size="12" fill="#2b2a27">977 ms</text><text x="60" y="63" font-size="12" fill="#2b2a27" text-anchor="end">Jest</text>
+      <path d="M70,48 h285.57 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-285.57 z" fill="#eb6834"/>
+      <text x="367.57" y="63" font-size="12" fill="#2b2a27">630 ms</text><text x="60" y="97" font-size="12" fill="#2b2a27" text-anchor="end">Vitest</text>
+      <path d="M70,82 h184.002 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-184.002 z" fill="#1baf7a"/>
+      <text x="266.002" y="97" font-size="12" fill="#2b2a27">409 ms</text></svg></figure>
+<p>O <b>Vitest</b> foi o mais rápido de ponta a ponta (408,7 ms), seguido do <b>Jest</b> (629,5 ms) e do <b>Japa</b> (976,7 ms). O tempo interno, porém, mostra outra leitura: o Japa executa os testes em apenas 38,6 ms, mas antes precisa inicializar a aplicação Adonis inteira (providers, rotas, Firebase), e esse custo fixo domina o tempo total. No Jest, a maior parte do tempo vai para a transformação TypeScript feita pelo ts-jest; o Vitest usa esbuild, que é mais rápido.</p>
+<h3>4.2 Volume de código</h3>
+<table><tr><th>Framework</th><th class="c">Linhas de teste</th><th class="c">+ dublês compartilhados</th><th class="c">Linhas de configuração</th></tr>
+<tr><td>Japa</td><td class="c">130</td><td class="c">170</td><td class="c">71</td></tr><tr><td>Jest</td><td class="c">125</td><td class="c">165</td><td class="c">10</td></tr><tr><td>Vitest</td><td class="c">123</td><td class="c">163</td><td class="c">14</td></tr></table>
+<p>Os volumes de teste são praticamente iguais (123 a 130 linhas), porque a lógica dos testes é a mesma. O Japa tem algumas linhas a mais por precisar criar e restaurar manualmente os stubs do Sinon, enquanto o Jest e o Vitest declaram os mocks de módulo de forma concisa. A diferença real está na configuração: no Japa são 71 linhas (arquivos de bootstrap gerados pelo Adonis e o registro da suíte), contra 10 no Jest e 14 no Vitest.</p>
+<h3>4.3 Cobertura de código</h3>
+<table><tr><th>Framework</th><th>Arquivo</th><th class="c">Linhas</th><th class="c">Instruções</th><th class="c">Ramos</th><th class="c">Funções</th></tr>
+<tr><td>Japa</td><td><b>Total</b></td><td class="c">45,0%</td><td class="c">45,0%</td><td class="c">72,7%</td><td class="c">40,0%</td></tr><tr><td>Japa</td><td>ChatsService.ts</td><td class="c">52,6%</td><td class="c">52,6%</td><td class="c">67,9%</td><td class="c">62,5%</td></tr><tr><td>Japa</td><td>UserService.ts</td><td class="c">31,2%</td><td class="c">31,2%</td><td class="c">100,0%</td><td class="c">14,3%</td></tr><tr><td>Jest</td><td><b>Total</b></td><td class="c">45,0%</td><td class="c">45,0%</td><td class="c">72,7%</td><td class="c">40,0%</td></tr><tr><td>Jest</td><td>ChatsService.ts</td><td class="c">52,6%</td><td class="c">52,6%</td><td class="c">67,9%</td><td class="c">62,5%</td></tr><tr><td>Jest</td><td>UserService.ts</td><td class="c">31,2%</td><td class="c">31,2%</td><td class="c">100,0%</td><td class="c">14,3%</td></tr><tr><td>Vitest</td><td><b>Total</b></td><td class="c">37,3%</td><td class="c">38,0%</td><td class="c">39,2%</td><td class="c">32,1%</td></tr><tr><td>Vitest</td><td>ChatsService.ts</td><td class="c">52,5%</td><td class="c">52,9%</td><td class="c">52,3%</td><td class="c">38,1%</td></tr><tr><td>Vitest</td><td>UserService.ts</td><td class="c">14,9%</td><td class="c">14,9%</td><td class="c">22,9%</td><td class="c">14,3%</td></tr></table>
+<p>Os mesmos 12 testes exercitam exatamente as mesmas linhas, mas as ferramentas contam de forma diferente. O Japa (c8) e o Jest (V8) convertem a cobertura linha a linha a partir dos <i>source maps</i> do compilador TypeScript e dão números idênticos (45,0% de linhas). O Vitest usa remapeamento guiado pela AST, que desconsidera linhas sem instruções (chaves, declarações) e é mais rigoroso, chegando a 37,3%. Os percentuais são moderados porque os 12 testes focam as regras de negócio de criação e manutenção de chats e de cadastro; métodos de consulta com <i>preload</i> e o upload de foto (Firebase) ficaram fora do escopo.</p>
+<h3>4.4 Esforço de configuração e dependências</h3>
+<table><tr><th>Framework</th><th class="c">Passos</th><th>Pacotes instalados</th><th class="c">Dependências transitivas</th><th class="c">Tamanho (MB)</th></tr>
+<tr><td>Japa</td><td class="c">5</td><td>@japa/runner@2.5.1, @japa/preset-adonis@1.2.0, sinon@22.1.0, c8@12.0.0</td><td class="c">366</td><td class="c">67</td></tr><tr><td>Jest</td><td class="c">2</td><td>jest@30.5.2, ts-jest@29.4.15, @types/jest@30</td><td class="c">322</td><td class="c">63</td></tr><tr><td>Vitest</td><td class="c">2</td><td>vitest@5.0.5, @vitest/coverage-v8@5.0.5</td><td class="c">36</td><td class="c">12</td></tr></table>
+<figure><figcaption>Dependências transitivas instaladas (menor é melhor)</figcaption>
+    <svg viewBox="0 0 640 132" width="100%" role="img" aria-label="Dependências transitivas instaladas (menor é melhor)"><line x1="70" y1="8" x2="70" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="70" y="126" font-size="10" fill="#77766f" text-anchor="middle">0</text><line x1="185" y1="8" x2="185" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="185" y="126" font-size="10" fill="#77766f" text-anchor="middle">100</text><line x1="300" y1="8" x2="300" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="300" y="126" font-size="10" fill="#77766f" text-anchor="middle">200</text><line x1="415" y1="8" x2="415" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="415" y="126" font-size="10" fill="#77766f" text-anchor="middle">300</text><line x1="530" y1="8" x2="530" y2="110" stroke="#e4e3df" stroke-width="1"/><text x="530" y="126" font-size="10" fill="#77766f" text-anchor="middle">400</text><text x="60" y="29" font-size="12" fill="#2b2a27" text-anchor="end">Japa</text>
+      <path d="M70,14 h416.9 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-416.9 z" fill="#2a78d6"/>
+      <text x="498.9" y="29" font-size="12" fill="#2b2a27">366 pacotes</text><text x="60" y="63" font-size="12" fill="#2b2a27" text-anchor="end">Jest</text>
+      <path d="M70,48 h366.3 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-366.3 z" fill="#eb6834"/>
+      <text x="448.3" y="63" font-size="12" fill="#2b2a27">322 pacotes</text><text x="60" y="97" font-size="12" fill="#2b2a27" text-anchor="end">Vitest</text>
+      <path d="M70,82 h37.4 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-37.4 z" fill="#1baf7a"/>
+      <text x="119.4" y="97" font-size="12" fill="#2b2a27">36 pacotes</text></svg></figure>
+<p>O Japa exige 5 passos: além do runner, foi preciso adicionar o Sinon para os dublês e o c8 para a cobertura, já que nenhum dos dois vem embutido. O Jest e o Vitest exigem 2 passos (instalar e criar o arquivo de configuração). O Vitest instala 36 pacotes (12 MB), cerca de 9 vezes menos que o Jest.</p>
+
+<h2>5. Resultados qualitativos</h2>
+<p>Escala: 1 = muito ruim, 5 = excelente. As notas foram atribuídas a partir da experiência de implementação e das saídas reais de falha (Apêndice A).</p>
+<table><tr><th>Critério</th><th class="c">Japa</th><th class="c">Jest</th><th class="c">Vitest</th></tr><tr><td>Curva de aprendizado</td><td class="c">3</td><td class="c">4</td><td class="c">5</td></tr><tr><td>Documentação oficial</td><td class="c">3</td><td class="c">5</td><td class="c">4</td></tr><tr><td>Mensagens de erro</td><td class="c">3</td><td class="c">5</td><td class="c">4</td></tr><tr><td>Integração com IDE e CI/CD</td><td class="c">3</td><td class="c">5</td><td class="c">5</td></tr><tr><td>Mocking embutido</td><td class="c">2</td><td class="c">5</td><td class="c">5</td></tr><tr><td>Suporte a TypeScript/ESM</td><td class="c">4</td><td class="c">3</td><td class="c">5</td></tr><tr><td>Integração com AdonisJS</td><td class="c">5</td><td class="c">2</td><td class="c">2</td></tr><tr><td>Ecossistema e comunidade</td><td class="c">2</td><td class="c">5</td><td class="c">4</td></tr>
+<tr><td><b>Média</b></td><td class="c"><b>3,13</b></td><td class="c"><b>4,25</b></td><td class="c"><b>4,25</b></td></tr></table>
+<h3>Justificativas</h3>
+<h4>Curva de aprendizado</h4><ul><li><b>Japa (3):</b> API pequena (test.group/test/assert), mas pouco material fora da documentação do Adonis; exige aprender Sinon à parte para dublês, e assert.rejects(fn, 'texto') exige mensagem exata (armadilha encontrada na prática).</li><li><b>Jest (4):</b> API expect amplamente conhecida e muito material didático; o atrito está na configuração TypeScript (ts-jest, moduleNameMapper para os aliases App/*).</li><li><b>Vitest (5):</b> Mesma API do Jest (describe/test/expect/vi), TypeScript sem transpilador extra e configuração mínima; quem conhece Jest migra trocando jest. por vi.</li></ul><h4>Documentação oficial</h4><ul><li><b>Japa (3):</b> Clara e objetiva, porém enxuta; a versão 2 (usada pelo Adonis 5) convive com a v3/v4, o que confunde buscas. Poucos exemplos de mocking.</li><li><b>Jest (5):</b> Extensa, madura, com guias de mocking, temporizadores, snapshots e referência completa de matchers.</li><li><b>Vitest (4):</b> Completa e bem organizada, com guia de migração do Jest; mudanças frequentes entre versões maiores exigem atenção à versão.</li></ul><h4>Mensagens de erro</h4><ul><li><b>Japa (3):</b> Diff legível em deepEqual e trecho do código do teste, mas truncou a mensagem recebida em rejects ('Chat já existe …') e exibiu um aviso confuso sobre tipos; asserções sobre stubs do Sinon (isFalse(stub.called)) não mostram contexto das chamadas.</li><li><b>Jest (5):</b> Mostra a substring esperada e a mensagem recebida completas, o trecho do serviço onde o erro foi lançado, diff de argumentos do mock e 'Number of calls'.</li><li><b>Vitest (4):</b> Expected/Received completos, diff dos argumentos do vi.fn() e número de chamadas; a linha do código-fonte exibida é truncada ('Chat d…').</li></ul><h4>Integração com IDE e CI/CD</h4><ul><li><b>Japa (3):</b> Roda em qualquer CI via 'node ace test'; integração com IDEs é limitada (sem runner nativo no WebStorm/VS Code para a v2).</li><li><b>Jest (5):</b> Suporte nativo no WebStorm, extensão oficial para VS Code, reporters JUnit e cobertura integrada; padrão de mercado em pipelines.</li><li><b>Vitest (5):</b> Extensão oficial para VS Code, suporte no WebStorm, modo watch rápido e reporter 'github-actions' embutido.</li></ul><h4>Mocking embutido</h4><ul><li><b>Japa (2):</b> Não possui: foi preciso instalar e configurar o Sinon e restaurar os stubs manualmente após cada teste.</li><li><b>Jest (5):</b> jest.mock/jest.fn/spyOn com mock de módulo inteiro e matchers de chamadas (toHaveBeenCalledWith).</li><li><b>Vitest (5):</b> vi.mock/vi.fn/spyOn equivalentes ao Jest, com hoisting automático de vi.mock.</li></ul><h4>Suporte a TypeScript/ESM</h4><ul><li><b>Japa (4):</b> Transparente dentro do Adonis (require-ts compila sob demanda), mas acoplado ao boot da aplicação.</li><li><b>Jest (3):</b> Precisa do ts-jest (ou Babel/SWC); ESM ainda é experimental e houve aviso de opção obsoleta durante a configuração.</li><li><b>Vitest (5):</b> TypeScript e ESM nativos via Vite/esbuild, sem transformadores adicionais.</li></ul><h4>Integração com AdonisJS</h4><ul><li><b>Japa (5):</b> Runner oficial do Adonis: sobe o container IoC, permite testes HTTP (api-client) e transações de banco; os models reais podem ser usados.</li><li><b>Jest (2):</b> Não inicializa o IoC do Adonis; módulos @ioc:* precisam ser mockados, o que restringe o uso a testes puramente unitários.</li><li><b>Vitest (2):</b> Mesma limitação do Jest: os models que importam @ioc:Adonis/Lucid/Orm precisam ser substituídos por mocks.</li></ul><h4>Ecossistema e comunidade</h4><ul><li><b>Japa (2):</b> Comunidade pequena, praticamente restrita ao AdonisJS; poucos plugins de terceiros.</li><li><b>Jest (5):</b> O mais adotado do ecossistema JavaScript; grande quantidade de plugins, exemplos e respostas na comunidade.</li><li><b>Vitest (4):</b> Crescimento acelerado e compatível com boa parte dos plugins do Jest, mas ainda menor que o Jest.</li></ul>
+
+<h2>6. Tabela comparativa consolidada</h2>
+<p class="legend">↓ menor é melhor · ↑ maior é melhor</p>
+<table><tr><th>Indicador</th><th class="c">Japa</th><th class="c">Jest</th><th class="c">Vitest</th></tr><tr><td>Tempo médio de parede (ms) ↓</td><td class="c">976,7</td><td class="c">629,5</td><td class="c">408,7</td></tr><tr><td>Desvio-padrão (ms) ↓</td><td class="c">66,6</td><td class="c">54,9</td><td class="c">45,0</td></tr><tr><td>Tempo interno relatado (ms) ↓</td><td class="c">38,6</td><td class="c">342,8</td><td class="c">168,6</td></tr><tr><td>Linhas de teste ↓</td><td class="c">130</td><td class="c">125</td><td class="c">123</td></tr><tr><td>Linhas de configuração ↓</td><td class="c">71</td><td class="c">10</td><td class="c">14</td></tr><tr><td>Passos de configuração ↓</td><td class="c">5</td><td class="c">2</td><td class="c">2</td></tr><tr><td>Cobertura de linhas ↑</td><td class="c">45,0%</td><td class="c">45,0%</td><td class="c">37,3%</td></tr><tr><td>Cobertura de ramos ↑</td><td class="c">72,7%</td><td class="c">72,7%</td><td class="c">39,2%</td></tr><tr><td>Dependências transitivas ↓</td><td class="c">366</td><td class="c">322</td><td class="c">36</td></tr><tr><td>Tamanho em disco (MB) ↓</td><td class="c">67</td><td class="c">63</td><td class="c">12</td></tr><tr><td>Curva de aprendizado (1–5) ↑</td><td class="c">3</td><td class="c">4</td><td class="c">5</td></tr><tr><td>Documentação oficial (1–5) ↑</td><td class="c">3</td><td class="c">5</td><td class="c">4</td></tr><tr><td>Mensagens de erro (1–5) ↑</td><td class="c">3</td><td class="c">5</td><td class="c">4</td></tr><tr><td>Integração com IDE e CI/CD (1–5) ↑</td><td class="c">3</td><td class="c">5</td><td class="c">5</td></tr><tr><td>Mocking embutido (1–5) ↑</td><td class="c">2</td><td class="c">5</td><td class="c">5</td></tr><tr><td>Suporte a TypeScript/ESM (1–5) ↑</td><td class="c">4</td><td class="c">3</td><td class="c">5</td></tr><tr><td>Integração com AdonisJS (1–5) ↑</td><td class="c">5</td><td class="c">2</td><td class="c">2</td></tr><tr><td>Ecossistema e comunidade (1–5) ↑</td><td class="c">2</td><td class="c">5</td><td class="c">4</td></tr><tr><td><b>Média qualitativa</b> ↑</td><td class="c"><b>3,13</b></td><td class="c"><b>4,25</b></td><td class="c"><b>4,25</b></td></tr></table>
+
+<h2>7. Análise crítica e recomendações</h2>
+<p>Nenhum framework vence em todos os critérios. O <b>Vitest</b> lidera nas métricas objetivas de desempenho e de leveza: menor tempo, menos dependências e configuração mínima, com TypeScript nativo. O <b>Jest</b> empata com o Vitest na média qualitativa, graças à documentação, às mensagens de erro e ao ecossistema, mas paga o custo da transformação TypeScript e de uma árvore de dependências grande. O <b>Japa</b> é o mais rápido para executar os testes em si e o único integrado ao AdonisJS, mas não traz mocking nem cobertura e carrega o custo de inicializar a aplicação a cada execução.</p>
+<table><tr><th>Cenário</th><th>Recomendação</th><th>Justificativa</th></tr>
+<tr><td>Projeto legado corporativo</td><td><b>Jest</b></td><td>Padrão de mercado, documentação extensa, suporte nativo em IDEs e ampla base de conhecimento na equipe. A estabilidade pesa mais que a velocidade.</td></tr>
+<tr><td>Startup ágil / projeto TypeScript moderno</td><td><b>Vitest</b></td><td>Menor tempo de feedback, configuração em 2 passos, TS/ESM nativos e API compatível com Jest (baixa barreira de migração).</td></tr>
+<tr><td>Disciplina introdutória</td><td><b>Vitest</b> (ou Jest)</td><td>Pouca configuração e mensagens de erro claras; a API <code>expect</code> é a mesma do Jest, então o aprendizado é transferível.</td></tr>
+<tr><td>Projeto com alta cobertura exigida</td><td><b>Vitest</b> ou <b>Jest</b></td><td>Cobertura embutida e mocking de módulos facilitam isolar ramos difíceis. A contagem por AST do Vitest é mais rigorosa (não infla o percentual).</td></tr>
+<tr><td>Aplicação AdonisJS com testes de integração/HTTP</td><td><b>Japa</b></td><td>É o runner oficial: sobe o IoC, usa os models reais, oferece cliente HTTP e transações de banco por teste. Pode ser combinado com Vitest/Jest para testes puramente unitários.</td></tr></table>
+
+<h2>8. Limitações do estudo</h2>
+<ul>
+<li><b>Amostra pequena:</b> 12 testes sobre dois serviços. Em suítes grandes, o custo fixo de inicialização (decisivo para o Japa) se dilui, e o paralelismo entre arquivos (Jest e Vitest) passa a pesar.</li>
+<li><b>Ambiente único:</b> as medições foram feitas em um contêiner Linux em nuvem compartilhado, com variação de cerca de 10% entre execuções. Os tempos absolutos mudam de máquina para máquina; a ordem relativa é o resultado mais confiável.</li>
+<li><b>Cobertura não comparável diretamente:</b> o Vitest conta linhas por AST, enquanto Japa e Jest convertem a cobertura linha a linha. A diferença percentual vem da ferramenta, não dos testes.</li>
+<li><b>Estratégias de dublê diferentes:</b> o Japa substitui métodos dos models reais (Sinon), enquanto Jest e Vitest substituem o módulo inteiro. Isso é idiomático em cada um, mas faz o Japa carregar mais código.</li>
+<li><b>Viés de familiaridade e subjetividade:</b> as notas qualitativas refletem a experiência desta implementação e podem ser influenciadas pela familiaridade prévia com a API <code>expect</code> do Jest.</li>
+<li><b>Versões:</b> o Japa 2 é a versão compatível com o AdonisJS 5; versões mais novas (Japa 3/4, AdonisJS 6) trazem melhorias que não foram avaliadas.</li>
+</ul>
+
+<h2>9. Conclusão</h2>
+<p>Para testes unitários isolados da <i>girls-chat-api</i>, o <b>Vitest</b> apresentou o melhor equilíbrio: foi 2,4 vezes mais rápido que o Japa e 1,5 vezes mais rápido que o Jest no tempo de parede, exige a menor configuração e empata com o Jest na avaliação qualitativa (4,25). O <b>Jest</b> continua a escolha mais segura em contextos corporativos pela maturidade e pelo ecossistema. O <b>Japa</b> se justifica quando os testes precisam da aplicação Adonis inicializada, como nos testes de integração e HTTP já existentes no projeto. A recomendação para o projeto é usar <b>Vitest para a camada unitária</b> e manter o <b>Japa para os testes de integração/funcionais</b>.</p>
+
+<h2>Referências</h2>
+<ul class="note">
+<li>Japa: documentação oficial, japa.dev (v2).</li>
+<li>Jest: documentação oficial, jestjs.io.</li>
+<li>Vitest: documentação oficial, vitest.dev.</li>
+<li>AdonisJS 5: documentação de testes, docs.adonisjs.com (v5).</li>
+<li>Sinon.JS: sinonjs.org. c8: github.com/bcoe/c8.</li>
+<li>MARTIN, R. C. <i>Clean Code: A Handbook of Agile Software Craftsmanship</i>. Prentice Hall, 2008 (princípios FIRST).</li>
+<li>MESZAROS, G. <i>xUnit Test Patterns: Refactoring Test Code</i>. Addison-Wesley, 2007 (dublês de teste).</li>
+</ul>
+
+<h2>Apêndice A: mensagens de erro capturadas</h2>
+<p class="note">Duas falhas foram introduzidas de propósito em uma cópia temporária dos testes: (1) a mensagem de exceção esperada foi trocada para "Chat duplicado" e (2) o nome esperado nos argumentos de <code>User.create</code> foi trocado para "Ana Maria".</p>
+<h3>Jest</h3><pre>FAIL tests/frameworks/jest/zz_falha.spec.ts
+  ● ChatsService › falha ao criar chat duplicado entre os mesmos usuários
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Chat duplicado"
+    Received message:   "Erro ao criar o chat: Chat já existe entre esses usuários"
+
+          133 |             return newChat;
+          134 |         } catch (error) {
+        &gt; 135 |             throw new Error("Erro ao criar o chat: " + error.message);
+              |                   ^
+          136 |         }
+          137 |     }
+          138 |
+
+      at ChatsService.createChat (app/services/ChatsService.ts:135:19)
+      at Object.&lt;anonymous&gt; (tests/frameworks/jest/zz_falha.spec.ts:70:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.&lt;anonymous&gt; (tests/frameworks/jest/zz_falha.spec.ts:70:56)
+
+  ● UserService › cria usuário armazenando a senha com hash MD5
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    - Expected
+    + Received
+
+      Object {
+        "email": "ana@test.com",
+    -   "name": "Ana Maria",
+    +   "name": "Ana",
+        "password": "e7d80ffeefa212b7c5c55700e4f7193e",
+      },
+
+    Number of calls: 1
+
+      133 |
+      134 |     expect(user.id).toBe(1)
+    &gt; 135 |     expect(UserMock.create).toHaveBeenCalledWith({
+          |                             ^
+      136 |       email: 'ana@test.com',
+      137 |       password: md5('senha123'),
+      138 |       name: 'Ana Maria',
+
+      at Object.&lt;anonymous&gt; (tests/frameworks/jest/zz_falha.spec.ts:135:29)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 10 passed, 12 total
+Snapshots:   0 total
+Time:        0.436 s
+Ran all test suites matching zz_falha.
+</pre>
+<h3>Vitest</h3><pre>
+ RUN  v5.0.5 /home/user/girls-chat-api
+
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts (12 tests | 2 failed) 26ms
+   ❯ ChatsService (9)
+     × falha ao criar chat duplicado entre os mesmos usuários 5ms
+   ❯ UserService (3)
+     × cria usuário armazenando a senha com hash MD5 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/frameworks/vitest/zz_falha.spec.ts &gt; ChatsService &gt; falha ao criar chat duplicado entre os mesmos usuários
+AssertionError: expected [Function] to throw error including 'Chat duplicado' but got 'Erro ao criar o chat: Chat já existe …'
+
+Expected: "Chat duplicado"
+Received: "Erro ao criar o chat: Chat já existe entre esses usuários"
+
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts:68:47
+     66|     ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+     67|
+     68|     await expect(service.createChat('1', '2')).rejects.toThrow('Chat d…
+       |                                               ^
+     69|     expect(ChatMock.create).not.toHaveBeenCalled()
+     70|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/frameworks/vitest/zz_falha.spec.ts &gt; UserService &gt; cria usuário armazenando a senha com hash MD5
+AssertionError: expected "vi.fn()" to be called with arguments: [ { email: 'ana@test.com', …(2) } ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    {
+      "email": "ana@test.com",
+-     "name": "Ana Maria",
++     "name": "Ana",
+      "password": "e7d80ffeefa212b7c5c55700e4f7193e",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts:133:29
+    131|
+    132|     expect(user.id).toBe(1)
+    133|     expect(UserMock.create).toHaveBeenCalledWith({
+       |                             ^
+    134|       email: 'ana@test.com',
+    135|       password: md5('senha123'),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  18:22:54
+   Duration  196ms (transform 47%, import 26%, tests 25%, worker 3%)
+
+</pre>
+<h3>Japa</h3><pre>[ info ]  running tests...
+
+frameworks / ChatsService (tests/frameworks/japa/zz_falha.spec.ts)
+  ✖ falha ao criar chat duplicado entre os mesmos usuários (3ms)
+
+frameworks / UserService (tests/frameworks/japa/zz_falha.spec.ts)
+  ✖ cria usuário armazenando a senha com hash MD5 (2ms)
+
+ FAILED 
+
+Tests   : 10 passed, 2 failed (12)
+Time    : 46ms
+
+
+✖ falha ao criar chat duplicado entre os mesmos usuários
+
+  Assertion Error: expected [Function] to throw error matching /Chat duplicado/ but got 'Erro ao criar o chat: Chat já existe …'
+
+  Comparing two different types of values. Expected regexp but received string.
+
+   at Object.executor tests/frameworks/japa/zz_falha.spec.ts:71
+   66|      stubs.userFind.callsFake(async (id: any) =&gt; fakeUser(id) as any)
+   67|      stubs.participantQuery.onFirstCall().returns(fakeQuery([fakeParticipant(10, 1)]))
+   68|      stubs.participantQuery.onSecondCall().returns(fakeQuery([fakeParticipant(10, 2)]))
+   69|      stubs.chatFind.resolves(fakeChat(10, 1))
+   70|  
+ ❯ 71|      await assert.rejects(() =&gt; service.createChat('1', '2'), /Chat duplicado/)
+   72|      assert.isFalse(stubs.chatCreate.called)
+   73|    })
+   74|  
+   75|    test('encontra o chat em comum entre dois usuários', async ({ assert }) =&gt; {
+   76|      stubs.participantQuery
+
+
+✖ cria usuário armazenando a senha com hash MD5
+
+  Assertion Error: expected { email: 'ana@test.com', …(2) } to deeply equal { email: 'ana@test.com', …(2) }
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+    "email": "ana@test.com",
+-   "name": "Ana Maria",
++   "name": "Ana",
+    "password": "e7d80ffeefa212b7c5c55700e4f7193e",
+  }
+
+   at Object.executor tests/frameworks/japa/zz_falha.spec.ts:143
+   138|      stubs.userCreate.callsFake(async (data: any) =&gt; ({ id: 1, ...data }))
+   139|  
+   140|      const user = await service.createUser('ana@test.com', 'senha123', 'Ana')
+   141|  
+   142|      assert.equal(user.id, 1)
+ ❯ 143|      assert.deepEqual(stubs.userCreate.firstCall.args[0], {
+   144|        email: 'ana@test.com',
+   145|        password: md5('senha123'),
+   146|        name: 'Ana Maria',
+   147|      })
+   148|    })
+
+
+</pre>
+</body></html>
