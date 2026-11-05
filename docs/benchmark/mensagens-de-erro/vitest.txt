@@ -1,0 +1,62 @@
+
+ RUN  v5.0.5 /home/user/girls-chat-api
+
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts (12 tests | 2 failed) 26ms
+   ❯ ChatsService (9)
+     × falha ao criar chat duplicado entre os mesmos usuários 5ms
+   ❯ UserService (3)
+     × cria usuário armazenando a senha com hash MD5 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/frameworks/vitest/zz_falha.spec.ts > ChatsService > falha ao criar chat duplicado entre os mesmos usuários
+AssertionError: expected [Function] to throw error including 'Chat duplicado' but got 'Erro ao criar o chat: Chat já existe …'
+
+Expected: "Chat duplicado"
+Received: "Erro ao criar o chat: Chat já existe entre esses usuários"
+
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts:68:47
+     66|     ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+     67|
+     68|     await expect(service.createChat('1', '2')).rejects.toThrow('Chat d…
+       |                                               ^
+     69|     expect(ChatMock.create).not.toHaveBeenCalled()
+     70|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/frameworks/vitest/zz_falha.spec.ts > UserService > cria usuário armazenando a senha com hash MD5
+AssertionError: expected "vi.fn()" to be called with arguments: [ { email: 'ana@test.com', …(2) } ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    {
+      "email": "ana@test.com",
+-     "name": "Ana Maria",
++     "name": "Ana",
+      "password": "e7d80ffeefa212b7c5c55700e4f7193e",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts:133:29
+    131|
+    132|     expect(user.id).toBe(1)
+    133|     expect(UserMock.create).toHaveBeenCalledWith({
+       |                             ^
+    134|       email: 'ana@test.com',
+    135|       password: md5('senha123'),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  18:22:54
+   Duration  196ms (transform 47%, import 26%, tests 25%, worker 3%)
+

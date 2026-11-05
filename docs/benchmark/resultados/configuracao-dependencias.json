@@ -1,0 +1,24 @@
+{
+  "metodo": "Passos = ações manuais para sair de um projeto sem testes até rodar testes + cobertura. Pacotes/tamanho = instalação limpa (npm i --legacy-peer-deps, sem TypeScript) dos pacotes listados, em diretório vazio.",
+  "Japa": {
+    "passos": 5,
+    "descricaoPassos": ["Instalar @japa/runner e @japa/preset-adonis", "Gerar test.ts, tests/bootstrap.ts e contracts/tests.ts (node ace configure tests)", "Registrar a suíte em .adonisrc.json", "Instalar sinon + @types/sinon (dublês)", "Instalar c8 (cobertura)"],
+    "pacotesInstalados": ["@japa/runner@2.5.1", "@japa/preset-adonis@1.2.0", "sinon@22.1.0", "c8@12.0.0"],
+    "dependenciasTransitivas": 366,
+    "tamanhoMB": 67
+  },
+  "Jest": {
+    "passos": 2,
+    "descricaoPassos": ["Instalar jest, ts-jest e @types/jest", "Criar jest.config.js (transform ts-jest, moduleNameMapper App/*, cobertura v8)"],
+    "pacotesInstalados": ["jest@30.5.2", "ts-jest@29.4.15", "@types/jest@30"],
+    "dependenciasTransitivas": 322,
+    "tamanhoMB": 63
+  },
+  "Vitest": {
+    "passos": 2,
+    "descricaoPassos": ["Instalar vitest e @vitest/coverage-v8", "Criar vitest.config.mts (alias App/*, cobertura v8)"],
+    "pacotesInstalados": ["vitest@5.0.5", "@vitest/coverage-v8@5.0.5"],
+    "dependenciasTransitivas": 36,
+    "tamanhoMB": 12
+  }
+}

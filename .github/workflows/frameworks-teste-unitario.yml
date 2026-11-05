@@ -1,0 +1,45 @@
+name: Frameworks de teste unitário (Japa x Jest x Vitest)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testes:
+    name: ${{ matrix.framework }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [japa, jest, vitest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Testes + cobertura
+        run: npm run ${{ matrix.framework }}:coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-${{ matrix.framework }}
+          path: coverage/${{ matrix.framework }}
+
+  benchmark:
+    name: Benchmark (5 execuções)
+    runs-on: ubuntu-latest
+    needs: testes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run benchmark
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resultados-benchmark
+          path: docs/benchmark/resultados

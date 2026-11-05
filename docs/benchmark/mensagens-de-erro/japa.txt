@@ -1,0 +1,72 @@
+[ info ]  running tests...
+
+frameworks / ChatsService (tests/frameworks/japa/zz_falha.spec.ts)
+  ✔ cria chat entre dois usuários com host e dois participantes (8ms)
+  ✔ falha ao criar chat sem os IDs obrigatórios (2ms)
+  ✔ falha ao criar chat quando o host não existe (2ms)
+  ✖ falha ao criar chat duplicado entre os mesmos usuários (3ms)
+  ✔ encontra o chat em comum entre dois usuários (2ms)
+  ✔ atualiza a última mensagem e a data do chat (11ms)
+  ✔ falha ao atualizar a última mensagem de chat inexistente (1ms)
+  ✔ falha ao adicionar usuário que já participa do chat (2ms)
+  ✔ remove participante existente do chat (2ms)
+
+frameworks / UserService (tests/frameworks/japa/zz_falha.spec.ts)
+  ✖ cria usuário armazenando a senha com hash MD5 (2ms)
+  ✔ falha ao criar usuário com e-mail inválido (1ms)
+  ✔ falha ao criar usuário com e-mail já cadastrado (1ms)
+
+ FAILED 
+
+Tests   : 10 passed, 2 failed (12)
+Time    : 46ms
+
+
+✖ falha ao criar chat duplicado entre os mesmos usuários
+
+  Assertion Error: expected [Function] to throw error matching /Chat duplicado/ but got 'Erro ao criar o chat: Chat já existe …'
+
+  Comparing two different types of values. Expected regexp but received string.
+
+   at Object.executor tests/frameworks/japa/zz_falha.spec.ts:71
+   66|      stubs.userFind.callsFake(async (id: any) => fakeUser(id) as any)
+   67|      stubs.participantQuery.onFirstCall().returns(fakeQuery([fakeParticipant(10, 1)]))
+   68|      stubs.participantQuery.onSecondCall().returns(fakeQuery([fakeParticipant(10, 2)]))
+   69|      stubs.chatFind.resolves(fakeChat(10, 1))
+   70|  
+ ❯ 71|      await assert.rejects(() => service.createChat('1', '2'), /Chat duplicado/)
+   72|      assert.isFalse(stubs.chatCreate.called)
+   73|    })
+   74|  
+   75|    test('encontra o chat em comum entre dois usuários', async ({ assert }) => {
+   76|      stubs.participantQuery
+
+
+✖ cria usuário armazenando a senha com hash MD5
+
+  Assertion Error: expected { email: 'ana@test.com', …(2) } to deeply equal { email: 'ana@test.com', …(2) }
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+    "email": "ana@test.com",
+-   "name": "Ana Maria",
++   "name": "Ana",
+    "password": "e7d80ffeefa212b7c5c55700e4f7193e",
+  }
+
+   at Object.executor tests/frameworks/japa/zz_falha.spec.ts:143
+   138|      stubs.userCreate.callsFake(async (data: any) => ({ id: 1, ...data }))
+   139|  
+   140|      const user = await service.createUser('ana@test.com', 'senha123', 'Ana')
+   141|  
+   142|      assert.equal(user.id, 1)
+ ❯ 143|      assert.deepEqual(stubs.userCreate.firstCall.args[0], {
+   144|        email: 'ana@test.com',
+   145|        password: md5('senha123'),
+   146|        name: 'Ana Maria',
+   147|      })
+   148|    })
+
+

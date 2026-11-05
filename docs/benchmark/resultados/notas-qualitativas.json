@@ -1,0 +1,54 @@
+{
+  "escala": "1 = muito ruim, 5 = excelente",
+  "observacao": "Notas propostas a partir da implementação e das saídas capturadas; devem ser revisadas pela equipe.",
+  "criterios": [
+    {
+      "criterio": "Curva de aprendizado",
+      "Japa": [3, "API pequena (test.group/test/assert), mas pouco material fora da documentação do Adonis; exige aprender Sinon à parte para dublês, e assert.rejects(fn, 'texto') exige mensagem exata (armadilha encontrada na prática)."],
+      "Jest": [4, "API expect amplamente conhecida e muito material didático; o atrito está na configuração TypeScript (ts-jest, moduleNameMapper para os aliases App/*)."],
+      "Vitest": [5, "Mesma API do Jest (describe/test/expect/vi), TypeScript sem transpilador extra e configuração mínima; quem conhece Jest migra trocando jest. por vi."]
+    },
+    {
+      "criterio": "Documentação oficial",
+      "Japa": [3, "Clara e objetiva, porém enxuta; a versão 2 (usada pelo Adonis 5) convive com a v3/v4, o que confunde buscas. Poucos exemplos de mocking."],
+      "Jest": [5, "Extensa, madura, com guias de mocking, temporizadores, snapshots e referência completa de matchers."],
+      "Vitest": [4, "Completa e bem organizada, com guia de migração do Jest; mudanças frequentes entre versões maiores exigem atenção à versão."]
+    },
+    {
+      "criterio": "Mensagens de erro",
+      "Japa": [3, "Diff legível em deepEqual e trecho do código do teste, mas truncou a mensagem recebida em rejects ('Chat já existe …') e exibiu um aviso confuso sobre tipos; asserções sobre stubs do Sinon (isFalse(stub.called)) não mostram contexto das chamadas."],
+      "Jest": [5, "Mostra a substring esperada e a mensagem recebida completas, o trecho do serviço onde o erro foi lançado, diff de argumentos do mock e 'Number of calls'."],
+      "Vitest": [4, "Expected/Received completos, diff dos argumentos do vi.fn() e número de chamadas; a linha do código-fonte exibida é truncada ('Chat d…')."]
+    },
+    {
+      "criterio": "Integração com IDE e CI/CD",
+      "Japa": [3, "Roda em qualquer CI via 'node ace test'; integração com IDEs é limitada (sem runner nativo no WebStorm/VS Code para a v2)."],
+      "Jest": [5, "Suporte nativo no WebStorm, extensão oficial para VS Code, reporters JUnit e cobertura integrada; padrão de mercado em pipelines."],
+      "Vitest": [5, "Extensão oficial para VS Code, suporte no WebStorm, modo watch rápido e reporter 'github-actions' embutido."]
+    },
+    {
+      "criterio": "Mocking embutido",
+      "Japa": [2, "Não possui: foi preciso instalar e configurar o Sinon e restaurar os stubs manualmente após cada teste."],
+      "Jest": [5, "jest.mock/jest.fn/spyOn com mock de módulo inteiro e matchers de chamadas (toHaveBeenCalledWith)."],
+      "Vitest": [5, "vi.mock/vi.fn/spyOn equivalentes ao Jest, com hoisting automático de vi.mock."]
+    },
+    {
+      "criterio": "Suporte a TypeScript/ESM",
+      "Japa": [4, "Transparente dentro do Adonis (require-ts compila sob demanda), mas acoplado ao boot da aplicação."],
+      "Jest": [3, "Precisa do ts-jest (ou Babel/SWC); ESM ainda é experimental e houve aviso de opção obsoleta durante a configuração."],
+      "Vitest": [5, "TypeScript e ESM nativos via Vite/esbuild, sem transformadores adicionais."]
+    },
+    {
+      "criterio": "Integração com AdonisJS",
+      "Japa": [5, "Runner oficial do Adonis: sobe o container IoC, permite testes HTTP (api-client) e transações de banco; os models reais podem ser usados."],
+      "Jest": [2, "Não inicializa o IoC do Adonis; módulos @ioc:* precisam ser mockados, o que restringe o uso a testes puramente unitários."],
+      "Vitest": [2, "Mesma limitação do Jest: os models que importam @ioc:Adonis/Lucid/Orm precisam ser substituídos por mocks."]
+    },
+    {
+      "criterio": "Ecossistema e comunidade",
+      "Japa": [2, "Comunidade pequena, praticamente restrita ao AdonisJS; poucos plugins de terceiros."],
+      "Jest": [5, "O mais adotado do ecossistema JavaScript; grande quantidade de plugins, exemplos e respostas na comunidade."],
+      "Vitest": [4, "Crescimento acelerado e compatível com boa parte dos plugins do Jest, mas ainda menor que o Jest."]
+    }
+  ]
+}

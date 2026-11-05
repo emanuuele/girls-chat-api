@@ -1,0 +1,36 @@
+{
+  "Japa": {
+    "linhasTestes": 130,
+    "linhasConfiguracao": 71,
+    "arquivos": {
+      "tests/frameworks/japa/services.spec.ts": 130,
+      "test.ts": 25,
+      "tests/bootstrap.ts": 14,
+      "contracts/tests.ts": 7,
+      ".adonisrc.json#tests": 25
+    }
+  },
+  "Jest": {
+    "linhasTestes": 125,
+    "linhasConfiguracao": 10,
+    "arquivos": {
+      "tests/frameworks/jest/services.spec.ts": 125,
+      "jest.config.js": 10
+    }
+  },
+  "Vitest": {
+    "linhasTestes": 123,
+    "linhasConfiguracao": 14,
+    "arquivos": {
+      "tests/frameworks/vitest/services.spec.ts": 123,
+      "vitest.config.mts": 14
+    }
+  },
+  "Compartilhado": {
+    "linhasTestes": 40,
+    "linhasConfiguracao": 0,
+    "arquivos": {
+      "tests/frameworks/shared/fakes.ts": 40
+    }
+  }
+}
