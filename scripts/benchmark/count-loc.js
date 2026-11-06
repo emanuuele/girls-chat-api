@@ -33,7 +33,9 @@ const GROUPS = {
 
 /** Remove comentários de bloco e de linha e conta as linhas não vazias. */
 function countLoc(source) {
-  const noBlock = source.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ''))
+  // Normaliza CRLF (Windows) para LF: sem isso, o "\r" no fim da linha impede que
+  // comentários "//" sejam reconhecidos e eles seriam contados como código.
+  const noBlock = source.replace(/\r\n?/g, '\n').replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ''))
   return noBlock
     .split('\n')
     .map((line) => line.replace(/(^|[^:'"])\/\/.*$/, '$1').trim())
