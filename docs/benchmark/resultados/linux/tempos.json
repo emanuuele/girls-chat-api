@@ -1,0 +1,139 @@
+{
+  "ambiente": {
+    "descricao": "VM/contêiner Linux em nuvem",
+    "date": "2026-11-05T18:23:40.711Z",
+    "node": "v22.23.4",
+    "platform": "Linux 6.18.44-fc-v236 (x64)",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.30GHz",
+    "cpus": 4,
+    "memoryGb": 15.7,
+    "runs": 5
+  },
+  "resumo": {
+    "Japa": {
+      "testes": 12,
+      "paredeMediaMs": 976.7,
+      "paredeDesvioMs": 66.6,
+      "internoMediaMs": 38.6
+    },
+    "Jest": {
+      "testes": 12,
+      "paredeMediaMs": 629.5,
+      "paredeDesvioMs": 54.9,
+      "internoMediaMs": 342.8
+    },
+    "Vitest": {
+      "testes": 12,
+      "paredeMediaMs": 408.7,
+      "paredeDesvioMs": 45,
+      "internoMediaMs": 168.6
+    }
+  },
+  "execucoes": [
+    {
+      "framework": "Japa",
+      "execucao": 1,
+      "wallMs": 1018.58692,
+      "internalMs": 39,
+      "passed": 12
+    },
+    {
+      "framework": "Japa",
+      "execucao": 2,
+      "wallMs": 1070.345701,
+      "internalMs": 38,
+      "passed": 12
+    },
+    {
+      "framework": "Japa",
+      "execucao": 3,
+      "wallMs": 920.244487,
+      "internalMs": 37,
+      "passed": 12
+    },
+    {
+      "framework": "Japa",
+      "execucao": 4,
+      "wallMs": 958.699429,
+      "internalMs": 40,
+      "passed": 12
+    },
+    {
+      "framework": "Japa",
+      "execucao": 5,
+      "wallMs": 915.711211,
+      "internalMs": 39,
+      "passed": 12
+    },
+    {
+      "framework": "Jest",
+      "execucao": 1,
+      "wallMs": 544.54494,
+      "internalMs": 274,
+      "passed": 12
+    },
+    {
+      "framework": "Jest",
+      "execucao": 2,
+      "wallMs": 606.120483,
+      "internalMs": 341,
+      "passed": 12
+    },
+    {
+      "framework": "Jest",
+      "execucao": 3,
+      "wallMs": 669.011414,
+      "internalMs": 360,
+      "passed": 12
+    },
+    {
+      "framework": "Jest",
+      "execucao": 4,
+      "wallMs": 677.143632,
+      "internalMs": 381,
+      "passed": 12
+    },
+    {
+      "framework": "Jest",
+      "execucao": 5,
+      "wallMs": 650.874292,
+      "internalMs": 358,
+      "passed": 12
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 1,
+      "wallMs": 482.956912,
+      "internalMs": 213,
+      "passed": 12
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 2,
+      "wallMs": 377.235115,
+      "internalMs": 140,
+      "passed": 12
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 3,
+      "wallMs": 370.734904,
+      "internalMs": 136,
+      "passed": 12
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 4,
+      "wallMs": 414.697578,
+      "internalMs": 184,
+      "passed": 12
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 5,
+      "wallMs": 397.8911,
+      "internalMs": 170,
+      "passed": 12
+    }
+  ]
+}
