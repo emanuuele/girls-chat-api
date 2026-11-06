@@ -1,0 +1,23 @@
+{
+  "observacao": "No Windows foi executado apenas \"npm run vitest:coverage\"; Japa e Jest não tiveram cobertura medida neste ambiente.",
+  "vitest": {
+    "total": {
+      "linhas": 37.34,
+      "instrucoes": 38.01,
+      "ramos": 39.24,
+      "funcoes": 32.14
+    },
+    "ChatsService.ts": {
+      "linhas": 52.52,
+      "instrucoes": 52.88,
+      "ramos": 52.27,
+      "funcoes": 38.09
+    },
+    "UserService.ts": {
+      "linhas": 14.92,
+      "instrucoes": 14.92,
+      "ramos": 22.85,
+      "funcoes": 14.28
+    }
+  }
+}

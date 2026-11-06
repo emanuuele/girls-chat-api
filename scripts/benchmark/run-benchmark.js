@@ -7,8 +7,9 @@
  *  - tempo total de parede (wall-clock) do processo, do spawn ao término;
  *  - tempo interno relatado pelo próprio framework (extraído da saída).
  *
- * Uso: node scripts/benchmark/run-benchmark.js [execuções=5]
- * Saída: docs/benchmark/resultados/tempos.csv e tempos.json
+ * Uso: node scripts/benchmark/run-benchmark.js [execuções=5] [pasta=sistema operacional]
+ * Saída: docs/benchmark/resultados/<linux|windows|macos>/tempos.csv e tempos.json
+ *        (cada ambiente grava na sua pasta, sem sobrescrever os resultados dos outros)
  */
 const { spawnSync } = require('child_process')
 const fs = require('fs')
@@ -18,7 +19,8 @@ const path = require('path')
 const ROOT = path.resolve(__dirname, '../..')
 const RUNS = Number(process.argv[2] || 5)
 const EXPECTED_TESTS = 12
-const OUT_DIR = path.join(ROOT, 'docs/benchmark/resultados')
+const PLATFORM_DIR = { win32: 'windows', darwin: 'macos', linux: 'linux' }[process.platform] || process.platform
+const OUT_DIR = path.join(ROOT, 'docs/benchmark/resultados', process.argv[3] || PLATFORM_DIR)
 // Chama o ponto de entrada JS de cada pacote com o próprio Node: funciona igual no
 // Windows (onde node_modules/.bin contém .cmd, que o spawnSync não executa) e no Linux/macOS.
 const NODE = process.execPath

@@ -20,10 +20,10 @@
   },
   "Vitest": {
     "linhasTestes": 123,
-    "linhasConfiguracao": 14,
+    "linhasConfiguracao": 15,
     "arquivos": {
       "tests/frameworks/vitest/services.spec.ts": 123,
-      "vitest.config.mts": 14
+      "vitest.config.mts": 15
     }
   },
   "Compartilhado": {
