@@ -1,137 +1,134 @@
 {
   "ambiente": {
-    "date": "2026-11-05T18:23:40.711Z",
-    "node": "v22.23.4",
-    "platform": "Linux 6.18.44-fc-v236 (x64)",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.30GHz",
-    "cpus": 4,
-    "memoryGb": 15.7,
+    "descricao": "Windows pessoal (testes via CMD)",
+    "fonte": "Transcrito da saída de \"npm run benchmark\" executado no CMD; o log traz o tempo de parede de cada execução (arredondado em ms) e apenas a média do tempo interno.",
+    "platform": "Windows",
     "runs": 5
   },
   "resumo": {
     "Japa": {
       "testes": 12,
-      "paredeMediaMs": 976.7,
-      "paredeDesvioMs": 66.6,
-      "internoMediaMs": 38.6
+      "paredeMediaMs": 5238.3,
+      "paredeDesvioMs": 267.3,
+      "internoMediaMs": 55.2
     },
     "Jest": {
       "testes": 12,
-      "paredeMediaMs": 629.5,
-      "paredeDesvioMs": 54.9,
-      "internoMediaMs": 342.8
+      "paredeMediaMs": 1019.8,
+      "paredeDesvioMs": 27.1,
+      "internoMediaMs": 610.8
     },
     "Vitest": {
       "testes": 12,
-      "paredeMediaMs": 408.7,
-      "paredeDesvioMs": 45,
-      "internoMediaMs": 168.6
+      "paredeMediaMs": 794,
+      "paredeDesvioMs": 23.3,
+      "internoMediaMs": 303.2
     }
   },
   "execucoes": [
     {
       "framework": "Japa",
       "execucao": 1,
-      "wallMs": 1018.58692,
-      "internalMs": 39,
+      "wallMs": 5012,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Japa",
       "execucao": 2,
-      "wallMs": 1070.345701,
-      "internalMs": 38,
+      "wallMs": 5100,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Japa",
       "execucao": 3,
-      "wallMs": 920.244487,
-      "internalMs": 37,
+      "wallMs": 5061,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Japa",
       "execucao": 4,
-      "wallMs": 958.699429,
-      "internalMs": 40,
+      "wallMs": 5374,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Japa",
       "execucao": 5,
-      "wallMs": 915.711211,
-      "internalMs": 39,
+      "wallMs": 5645,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Jest",
       "execucao": 1,
-      "wallMs": 544.54494,
-      "internalMs": 274,
+      "wallMs": 1046,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Jest",
       "execucao": 2,
-      "wallMs": 606.120483,
-      "internalMs": 341,
+      "wallMs": 1000,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Jest",
       "execucao": 3,
-      "wallMs": 669.011414,
-      "internalMs": 360,
+      "wallMs": 1050,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Jest",
       "execucao": 4,
-      "wallMs": 677.143632,
-      "internalMs": 381,
+      "wallMs": 1012,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Jest",
       "execucao": 5,
-      "wallMs": 650.874292,
-      "internalMs": 358,
+      "wallMs": 991,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Vitest",
       "execucao": 1,
-      "wallMs": 482.956912,
-      "internalMs": 213,
+      "wallMs": 772,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Vitest",
       "execucao": 2,
-      "wallMs": 377.235115,
-      "internalMs": 140,
+      "wallMs": 807,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Vitest",
       "execucao": 3,
-      "wallMs": 370.734904,
-      "internalMs": 136,
+      "wallMs": 793,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Vitest",
       "execucao": 4,
-      "wallMs": 414.697578,
-      "internalMs": 184,
+      "wallMs": 826,
+      "internalMs": null,
       "passed": 12
     },
     {
       "framework": "Vitest",
       "execucao": 5,
-      "wallMs": 397.8911,
-      "internalMs": 170,
+      "wallMs": 772,
+      "internalMs": null,
       "passed": 12
     }
   ]
