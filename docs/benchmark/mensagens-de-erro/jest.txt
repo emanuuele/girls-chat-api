@@ -1,3 +1,5 @@
+# Saída real com 2 falhas introduzidas de propósito. As linhas de console.log de depuração do próprio UserService (ex.: 'qqaaa', 'chegou aqui') foram removidas.
+
 FAIL tests/frameworks/jest/zz_falha.spec.ts
   ● ChatsService › falha ao criar chat duplicado entre os mesmos usuários
 
@@ -15,9 +17,9 @@ FAIL tests/frameworks/jest/zz_falha.spec.ts
           138 |
 
       at ChatsService.createChat (app/services/ChatsService.ts:135:19)
-      at Object.<anonymous> (tests/frameworks/jest/zz_falha.spec.ts:70:5)
+      at Object.<anonymous> (tests/frameworks/jest/zz_falha.spec.ts:72:5)
       at Object.toThrow (node_modules/expect/build/index.js:2155:20)
-      at Object.<anonymous> (tests/frameworks/jest/zz_falha.spec.ts:70:56)
+      at Object.<anonymous> (tests/frameworks/jest/zz_falha.spec.ts:72:56)
 
   ● UserService › cria usuário armazenando a senha com hash MD5
 
@@ -35,18 +37,18 @@ FAIL tests/frameworks/jest/zz_falha.spec.ts
 
     Number of calls: 1
 
-      133 |
-      134 |     expect(user.id).toBe(1)
-    > 135 |     expect(UserMock.create).toHaveBeenCalledWith({
+      332 |
+      333 |     expect(user.id).toBe(1)
+    > 334 |     expect(UserMock.create).toHaveBeenCalledWith({
           |                             ^
-      136 |       email: 'ana@test.com',
-      137 |       password: md5('senha123'),
-      138 |       name: 'Ana Maria',
+      335 |       email: 'ana@test.com',
+      336 |       password: md5('senha123'),
+      337 |       name: 'Ana Maria',
 
-      at Object.<anonymous> (tests/frameworks/jest/zz_falha.spec.ts:135:29)
+      at Object.<anonymous> (tests/frameworks/jest/zz_falha.spec.ts:334:29)
 
 Test Suites: 1 failed, 1 total
-Tests:       2 failed, 10 passed, 12 total
+Tests:       2 failed, 43 passed, 45 total
 Snapshots:   0 total
-Time:        0.436 s
+Time:        0.561 s, estimated 1 s
 Ran all test suites matching zz_falha.

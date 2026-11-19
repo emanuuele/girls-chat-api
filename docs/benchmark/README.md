@@ -50,9 +50,9 @@ O workflow `.github/workflows/frameworks-teste-unitario.yml` roda os três frame
 
 | Framework | Parede (ms) | Interno (ms) |
 |---|---:|---:|
-| Japa | 1.128,3 ± 75,9 | 106,0 |
-| Jest | 693,4 ± 25,9 | 388,2 |
-| Vitest | **465,8 ± 30,5** | 192,6 |
+| Japa | 1.205,5 ± 67,5 | 101,0 |
+| Jest | 712,2 ± 27,5 | 403,4 |
+| Vitest | **492,4 ± 29,6** | 193,0 |
 
 A ordem é a mesma da versão de 12 testes: **Vitest < Jest < Japa**. A medição no Windows pessoal deve ser refeita com os 45 testes (`npm run benchmark` no CMD), gravando em `resultados/windows/`.
 
@@ -61,7 +61,7 @@ A ordem é a mesma da versão de 12 testes: **Vitest < Jest < Japa**. A mediçã
 | Indicador | Japa | Jest | Vitest |
 |---|---:|---:|---:|
 | Testes (idênticos nos 3) | 45 | 45 | 45 |
-| Linhas de teste | 714 | 456 | **454** |
+| Linhas de teste | 460 | 401 | **399** |
 | Linhas de configuração | 71 | **10** | 15 |
 | Cobertura de linhas | 98,45% | 98,45% | **98,79%*** |
 | Cobertura de ramos | 97,87% | 97,87% | **98,73%** |
@@ -69,6 +69,8 @@ A ordem é a mesma da versão de 12 testes: **Vitest < Jest < Japa**. A mediçã
 | Média qualitativa (1–5) | 3,13 | **4,25** | **4,25** |
 
 \* O Vitest conta linhas pela AST (ignora linhas sem instrução); a diferença vem da ferramenta, não dos testes.
+
+Os três arquivos de teste foram formatados com a mesma configuração do Prettier (`--no-semi --single-quote --print-width 100 --trailing-comma es5`), para que a contagem de linhas compare o código e não o estilo de formatação.
 
 ### Evolução da cobertura de linhas
 
