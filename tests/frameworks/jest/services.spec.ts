@@ -69,7 +69,9 @@ describe('ChatsService', () => {
       .mockReturnValueOnce(fakeQuery([fakeParticipant(10, 2)]))
     ChatMock.find.mockResolvedValue(fakeChat(10, 1))
 
-    await expect(service.createChat('1', '2')).rejects.toThrow('Chat já existe entre esses usuários')
+    await expect(service.createChat('1', '2')).rejects.toThrow(
+      'Chat já existe entre esses usuários'
+    )
     expect(ChatMock.create).not.toHaveBeenCalled()
   })
 
@@ -122,106 +124,82 @@ describe('ChatsService', () => {
     expect(result).toBe(true)
     expect(participant.deleted).toBe(true)
   })
-test('retorna null quando não existe chat entre usuários', async () => {
-  ParticipantMock.query
-    .mockReturnValueOnce(fakeQuery([]))
-    .mockReturnValueOnce(fakeQuery([]))
+  test('retorna null quando não existe chat entre usuários', async () => {
+    ParticipantMock.query.mockReturnValueOnce(fakeQuery([])).mockReturnValueOnce(fakeQuery([]))
 
-  const chat = await service.chatBetweenUsers('1', '2')
+    const chat = await service.chatBetweenUsers('1', '2')
 
-  expect(chat).toBeNull()
-})
+    expect(chat).toBeNull()
+  })
 
-test('adiciona participante ao chat com sucesso', async () => {
-  ChatMock.find.mockResolvedValue(fakeChat(10, 1))
-  UserMock.find.mockResolvedValue(fakeUser(2))
-  ParticipantMock.query.mockReturnValue(fakeQuery([]))
+  test('adiciona participante ao chat com sucesso', async () => {
+    ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+    UserMock.find.mockResolvedValue(fakeUser(2))
+    ParticipantMock.query.mockReturnValue(fakeQuery([]))
 
-  ParticipantMock.create.mockResolvedValue(
-    fakeParticipant(10, 2)
-  )
+    ParticipantMock.create.mockResolvedValue(fakeParticipant(10, 2))
 
-  const participant = await service.addParticipantToChat(
-    10,
-    2
-  )
+    const participant = await service.addParticipantToChat(10, 2)
 
-  expect(participant.id_chat).toBe(10)
-})
+    expect(participant.id_chat).toBe(10)
+  })
 
-test('falha ao adicionar participante em chat inexistente', async () => {
-  ChatMock.find.mockResolvedValue(null)
+  test('falha ao adicionar participante em chat inexistente', async () => {
+    ChatMock.find.mockResolvedValue(null)
 
-  await expect(
-    service.addParticipantToChat(10, 2)
-  ).rejects.toThrow('Chat não encontrado')
-})
+    await expect(service.addParticipantToChat(10, 2)).rejects.toThrow('Chat não encontrado')
+  })
 
-test('falha ao adicionar participante inexistente', async () => {
-  ChatMock.find.mockResolvedValue(fakeChat(10, 1))
-  UserMock.find.mockResolvedValue(null)
+  test('falha ao adicionar participante inexistente', async () => {
+    ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+    UserMock.find.mockResolvedValue(null)
 
-  await expect(
-    service.addParticipantToChat(10, 2)
-  ).rejects.toThrow('Usuário não encontrado')
-})
+    await expect(service.addParticipantToChat(10, 2)).rejects.toThrow('Usuário não encontrado')
+  })
 
-test('retorna participantes do chat', async () => {
-  ParticipantMock.query.mockReturnValue(
-    fakeQuery([
-      { user: fakeUser(1) },
-      { user: fakeUser(2) },
-    ])
-  )
+  test('retorna participantes do chat', async () => {
+    ParticipantMock.query.mockReturnValue(fakeQuery([{ user: fakeUser(1) }, { user: fakeUser(2) }]))
 
-  const participants = await service.getChatParticipants(10)
+    const participants = await service.getChatParticipants(10)
 
-  expect(participants).toHaveLength(2)
-})
+    expect(participants).toHaveLength(2)
+  })
 
-test('retorna lista vazia quando usuário não possui chats', async () => {
-  ParticipantMock.query.mockReturnValue(
-    fakeQuery([])
-  )
+  test('retorna lista vazia quando usuário não possui chats', async () => {
+    ParticipantMock.query.mockReturnValue(fakeQuery([]))
 
-  const chats = await service.getUserChats('1')
+    const chats = await service.getUserChats('1')
 
-  expect(chats).toEqual([])
-})
+    expect(chats).toEqual([])
+  })
 
-test('falha ao buscar chat inexistente', async () => {
-  ;(ChatMock as any).query = jest.fn(() => ({
-    where: () => ({
-      preload: () => ({
+  test('falha ao buscar chat inexistente', async () => {
+    ;(ChatMock as any).query = jest.fn(() => ({
+      where: () => ({
         preload: () => ({
           preload: () => ({
-            first: async () => null,
+            preload: () => ({
+              first: async () => null,
+            }),
           }),
         }),
       }),
-    }),
-  }))
+    }))
 
-  await expect(
-    service.showChat('99')
-  ).rejects.toThrow('Chat não encontrado')
-})
-test('retorna chats do usuário', async () => {
-  const participation = {
-    chat: {
-      id: 10,
-      toJSON: () => ({
+    await expect(service.showChat('99')).rejects.toThrow('Chat não encontrado')
+  })
+  test('retorna chats do usuário', async () => {
+    const participation = {
+      chat: {
         id: 10,
-        last_message_at: new Date().toISOString(),
-      }),
-    },
-  }
+        toJSON: () => ({
+          id: 10,
+          last_message_at: new Date().toISOString(),
+        }),
+      },
+    }
 
-  ParticipantMock.query
-    .mockReturnValueOnce(
-      fakeQuery([participation])
-    )
-    .mockReturnValueOnce(
+    ParticipantMock.query.mockReturnValueOnce(fakeQuery([participation])).mockReturnValueOnce(
       fakeQuery([
         {
           user: fakeUser(2),
@@ -229,66 +207,63 @@ test('retorna chats do usuário', async () => {
       ])
     )
 
-  const chats = await service.getUserChats('1')
+    const chats = await service.getUserChats('1')
 
-  expect(chats).toHaveLength(1)
-  expect(chats[0].id).toBe(10)
-})
-test('retorna chat existente', async () => {
-  const chat = {
-    id: 10,
-    toJSON: () => ({ id: 10 }),
-  }
+    expect(chats).toHaveLength(1)
+    expect(chats[0].id).toBe(10)
+  })
+  test('retorna chat existente', async () => {
+    const chat = {
+      id: 10,
+      toJSON: () => ({ id: 10 }),
+    }
 
-  ;(ChatMock as any).query = jest.fn(() => ({
-    where: () => ({
-      preload: () => ({
+    ;(ChatMock as any).query = jest.fn(() => ({
+      where: () => ({
         preload: () => ({
           preload: () => ({
-            first: async () => chat,
+            preload: () => ({
+              first: async () => chat,
+            }),
           }),
         }),
       }),
-    }),
-  }))
+    }))
 
-  const result: any = await service.showChat('10')
+    const result: any = await service.showChat('10')
 
-  expect(result.id).toBe(10)
-})
-test('retorna chat com participantes quando informado usuário logado', async () => {
-  const chat = {
-    id: 10,
-    toJSON: () => ({ id: 10 }),
-  }
+    expect(result.id).toBe(10)
+  })
+  test('retorna chat com participantes quando informado usuário logado', async () => {
+    const chat = {
+      id: 10,
+      toJSON: () => ({ id: 10 }),
+    }
 
-  ;(ChatMock as any).query = jest.fn(() => ({
-    where: () => ({
-      preload: () => ({
+    ;(ChatMock as any).query = jest.fn(() => ({
+      where: () => ({
         preload: () => ({
           preload: () => ({
-            first: async () => chat,
+            preload: () => ({
+              first: async () => chat,
+            }),
           }),
         }),
       }),
-    }),
-  }))
+    }))
 
-  ParticipantMock.query.mockReturnValue(
-    fakeQuery([
-      {
-        user: fakeUser(2),
-      },
-    ])
-  )
+    ParticipantMock.query.mockReturnValue(
+      fakeQuery([
+        {
+          user: fakeUser(2),
+        },
+      ])
+    )
 
-  const result: any = await service.showChat(
-    '10',
-    '1'
-  )
+    const result: any = await service.showChat('10', '1')
 
-  expect(result.participant).toHaveLength(1)
-})
+    expect(result.participant).toHaveLength(1)
+  })
   test('falha ao buscar chats sem informar o usuário', async () => {
     await expect(service.getUserChats('')).rejects.toThrow('O ID do usuário é obrigatório')
   })
@@ -369,40 +344,23 @@ describe('UserService', () => {
     )
     expect(UserMock.query).not.toHaveBeenCalled()
   })
-test('falha ao buscar login com email inválido', async () => {
-  await expect(
-    service.getUserByEmailAndPassword(
-      'email-invalido',
-      '123456'
+  test('falha ao buscar login com email inválido', async () => {
+    await expect(service.getUserByEmailAndPassword('email-invalido', '123456')).rejects.toThrow(
+      'Preencha o campo senha e e-mail corretamente'
     )
-  ).rejects.toThrow(
-    'Preencha o campo senha e e-mail corretamente'
-  )
-})
-test('falha ao salvar foto sem informar usuário', async () => {
-  await expect(
-    service.saveProfilePicture(
-      '' as any,
-      null as any
-    )
-  ).rejects.toThrow()
-})
-test('falha ao salvar foto para usuário inexistente', async () => {
-  UserMock.find.mockResolvedValue(null)
+  })
+  test('falha ao salvar foto sem informar usuário', async () => {
+    await expect(service.saveProfilePicture('' as any, null as any)).rejects.toThrow()
+  })
+  test('falha ao salvar foto para usuário inexistente', async () => {
+    UserMock.find.mockResolvedValue(null)
 
-  const file: any = {
-    extname: 'jpg',
-  }
+    const file: any = {
+      extname: 'jpg',
+    }
 
-  await expect(
-    service.saveProfilePicture(
-      1,
-      file
-    )
-  ).rejects.toThrow(
-    'Usuário não encontrado'
-  )
-})
+    await expect(service.saveProfilePicture(1, file)).rejects.toThrow('Usuário não encontrado')
+  })
 
   test('falha ao criar usuário com e-mail já cadastrado', async () => {
     UserMock.query.mockReturnValue(fakeQuery([fakeUser(1)]))
@@ -412,101 +370,84 @@ test('falha ao salvar foto para usuário inexistente', async () => {
     )
     expect(UserMock.create).not.toHaveBeenCalled()
   })
-test('busca usuário por id', async () => {
-  UserMock.find.mockResolvedValue(fakeUser(1))
+  test('busca usuário por id', async () => {
+    UserMock.find.mockResolvedValue(fakeUser(1))
 
-  const user = await service.getUserById(1)
+    const user = await service.getUserById(1)
 
-  expect(user.id).toBe(1)
-})
-
-test('falha ao buscar usuário inexistente', async () => {
-  UserMock.find.mockResolvedValue(null)
-
-  await expect(
-    service.getUserById(999)
-  ).rejects.toThrow('Usuário não encontrado')
-})
-
-test('retorna usuários exceto o informado', async () => {
-  UserMock.query.mockReturnValue(
-    fakeQuery([
-      fakeUser(2),
-      fakeUser(3),
-    ])
-  )
-
-  const users = await service.getAllUsersExcept(1)
-
-  expect(users).toHaveLength(2)
-})
-
-test('atualiza usuário existente', async () => {
-  const user: any = {
-    merge: jest.fn(),
-    save: jest.fn(),
-  }
-
-  UserMock.query.mockReturnValue(fakeQuery([user]))
-
-  const result = await service.updateUser('1', {
-    name: 'Maria',
+    expect(user.id).toBe(1)
   })
 
-  expect(result).toBe(user)
-  expect(user.merge).toHaveBeenCalled()
-})
+  test('falha ao buscar usuário inexistente', async () => {
+    UserMock.find.mockResolvedValue(null)
 
-test('realiza login com email e senha válidos', async () => {
-  UserMock.query.mockReturnValue(
-    fakeQuery([
-      {
-        id: 1,
-        email: 'ana@test.com',
-      },
-    ])
-  )
+    await expect(service.getUserById(999)).rejects.toThrow('Usuário não encontrado')
+  })
 
-  const user = await service.getUserByEmailAndPassword(
-    'ana@test.com',
-    '123456'
-  )
+  test('retorna usuários exceto o informado', async () => {
+    UserMock.query.mockReturnValue(fakeQuery([fakeUser(2), fakeUser(3)]))
 
-  expect(user.id).toBe(1)
-})
+    const users = await service.getAllUsersExcept(1)
 
-test('falha no login quando usuário não existe', async () => {
-  UserMock.query.mockReturnValue(fakeQuery([]))
+    expect(users).toHaveLength(2)
+  })
 
-  await expect(
-    service.getUserByEmailAndPassword(
-      'ana@test.com',
-      '123456'
-    )
-  ).rejects.toThrow('Usuário não encontrado')
-})
+  test('atualiza usuário existente', async () => {
+    const user: any = {
+      merge: jest.fn(),
+      save: jest.fn(),
+    }
 
-test('falha ao atualizar usuário inexistente', async () => {
-  UserMock.query.mockReturnValue(fakeQuery([]))
+    UserMock.query.mockReturnValue(fakeQuery([user]))
 
-  await expect(
-    service.updateUser('999', {
+    const result = await service.updateUser('1', {
       name: 'Maria',
     })
-  ).rejects.toThrow('Usuário não encontrado')
-})
 
-test('falha ao buscar usuários sem informar id', async () => {
-  await expect(
-    service.getAllUsersExcept('')
-  ).rejects.toThrow('O ID do usuário é obrigatório')
-})
+    expect(result).toBe(user)
+    expect(user.merge).toHaveBeenCalled()
+  })
 
-test('falha ao buscar usuário sem informar id', async () => {
-  await expect(
-    service.getUserById('')
-  ).rejects.toThrow('O ID do usuário é obrigatório')
-})
+  test('realiza login com email e senha válidos', async () => {
+    UserMock.query.mockReturnValue(
+      fakeQuery([
+        {
+          id: 1,
+          email: 'ana@test.com',
+        },
+      ])
+    )
+
+    const user = await service.getUserByEmailAndPassword('ana@test.com', '123456')
+
+    expect(user.id).toBe(1)
+  })
+
+  test('falha no login quando usuário não existe', async () => {
+    UserMock.query.mockReturnValue(fakeQuery([]))
+
+    await expect(service.getUserByEmailAndPassword('ana@test.com', '123456')).rejects.toThrow(
+      'Usuário não encontrado'
+    )
+  })
+
+  test('falha ao atualizar usuário inexistente', async () => {
+    UserMock.query.mockReturnValue(fakeQuery([]))
+
+    await expect(
+      service.updateUser('999', {
+        name: 'Maria',
+      })
+    ).rejects.toThrow('Usuário não encontrado')
+  })
+
+  test('falha ao buscar usuários sem informar id', async () => {
+    await expect(service.getAllUsersExcept('')).rejects.toThrow('O ID do usuário é obrigatório')
+  })
+
+  test('falha ao buscar usuário sem informar id', async () => {
+    await expect(service.getUserById('')).rejects.toThrow('O ID do usuário é obrigatório')
+  })
   test('falha ao atualizar usuário sem informar id', async () => {
     await expect(service.updateUser('', { name: 'Maria' })).rejects.toThrow(
       'O ID do usuário é obrigatório'
@@ -544,7 +485,11 @@ test('falha ao buscar usuário sem informar id', async () => {
   test('falha ao salvar foto quando o Storage rejeita o envio', async () => {
     UserMock.find.mockResolvedValue({ id: 1, save: jest.fn() })
     StorageMock.getStorage.mockReturnValue({
-      bucket: () => ({ upload: async () => { throw new Error('sem permissão') } }),
+      bucket: () => ({
+        upload: async () => {
+          throw new Error('sem permissão')
+        },
+      }),
     })
     const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
 

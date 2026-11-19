@@ -1,9 +1,9 @@
 {
   "ambiente": {
     "descricao": "VM/contêiner Linux em nuvem",
-    "date": "2026-11-19T00:30:58.472Z",
+    "date": "2026-11-19T00:42:22.779Z",
     "node": "v22.23.4",
-    "platform": "Linux 6.18.44-fc-v595 (x64)",
+    "platform": "Linux 6.18.44-fc-v653 (x64)",
     "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "cpus": 4,
     "memoryGb": 15.7,
@@ -12,127 +12,127 @@
   "resumo": {
     "Japa": {
       "testes": 45,
-      "paredeMediaMs": 1128.3,
-      "paredeDesvioMs": 75.9,
-      "internoMediaMs": 106
+      "paredeMediaMs": 1205.5,
+      "paredeDesvioMs": 67.5,
+      "internoMediaMs": 101
     },
     "Jest": {
       "testes": 45,
-      "paredeMediaMs": 693.4,
-      "paredeDesvioMs": 25.9,
-      "internoMediaMs": 388.2
+      "paredeMediaMs": 712.2,
+      "paredeDesvioMs": 27.5,
+      "internoMediaMs": 403.4
     },
     "Vitest": {
       "testes": 45,
-      "paredeMediaMs": 465.8,
-      "paredeDesvioMs": 30.5,
-      "internoMediaMs": 192.6
+      "paredeMediaMs": 492.4,
+      "paredeDesvioMs": 29.6,
+      "internoMediaMs": 193
     }
   },
   "execucoes": [
     {
       "framework": "Japa",
       "execucao": 1,
-      "wallMs": 1116.949171,
-      "internalMs": 109,
+      "wallMs": 1105.75954,
+      "internalMs": 91,
       "passed": 45
     },
     {
       "framework": "Japa",
       "execucao": 2,
-      "wallMs": 1213.884198,
-      "internalMs": 128,
+      "wallMs": 1245.238893,
+      "internalMs": 105,
       "passed": 45
     },
     {
       "framework": "Japa",
       "execucao": 3,
-      "wallMs": 1012.410077,
-      "internalMs": 90,
+      "wallMs": 1280.650437,
+      "internalMs": 106,
       "passed": 45
     },
     {
       "framework": "Japa",
       "execucao": 4,
-      "wallMs": 1174.771868,
-      "internalMs": 109,
+      "wallMs": 1175.993797,
+      "internalMs": 99,
       "passed": 45
     },
     {
       "framework": "Japa",
       "execucao": 5,
-      "wallMs": 1123.49939,
-      "internalMs": 94,
+      "wallMs": 1219.668008,
+      "internalMs": 104,
       "passed": 45
     },
     {
       "framework": "Jest",
       "execucao": 1,
-      "wallMs": 690.270436,
-      "internalMs": 402,
+      "wallMs": 717.62065,
+      "internalMs": 415,
       "passed": 45
     },
     {
       "framework": "Jest",
       "execucao": 2,
-      "wallMs": 736.230214,
-      "internalMs": 416,
+      "wallMs": 750.592801,
+      "internalMs": 451,
       "passed": 45
     },
     {
       "framework": "Jest",
       "execucao": 3,
-      "wallMs": 687.057684,
+      "wallMs": 678.691222,
+      "internalMs": 361,
+      "passed": 45
+    },
+    {
+      "framework": "Jest",
+      "execucao": 4,
+      "wallMs": 693.946328,
       "internalMs": 393,
       "passed": 45
     },
     {
       "framework": "Jest",
-      "execucao": 4,
-      "wallMs": 687.958461,
-      "internalMs": 365,
-      "passed": 45
-    },
-    {
-      "framework": "Jest",
       "execucao": 5,
-      "wallMs": 665.707564,
-      "internalMs": 365,
+      "wallMs": 720.352794,
+      "internalMs": 397,
       "passed": 45
     },
     {
       "framework": "Vitest",
       "execucao": 1,
-      "wallMs": 506.693298,
-      "internalMs": 212,
+      "wallMs": 482.606572,
+      "internalMs": 198,
       "passed": 45
     },
     {
       "framework": "Vitest",
       "execucao": 2,
-      "wallMs": 472.572059,
-      "internalMs": 186,
+      "wallMs": 479.984169,
+      "internalMs": 199,
       "passed": 45
     },
     {
       "framework": "Vitest",
       "execucao": 3,
-      "wallMs": 475.777818,
-      "internalMs": 190,
+      "wallMs": 468.957068,
+      "internalMs": 180,
       "passed": 45
     },
     {
       "framework": "Vitest",
       "execucao": 4,
-      "wallMs": 426.15693,
-      "internalMs": 192,
+      "wallMs": 486.571693,
+      "internalMs": 188,
       "passed": 45
     },
     {
       "framework": "Vitest",
       "execucao": 5,
-      "wallMs": 447.551285,
-      "internalMs": 183,
+      "wallMs": 544.07696,
+      "internalMs": 200,
       "passed": 45
     }
   ]

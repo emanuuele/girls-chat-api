@@ -1,9 +1,9 @@
 {
   "Japa": {
-    "linhasTestes": 714,
+    "linhasTestes": 460,
     "linhasConfiguracao": 71,
     "arquivos": {
-      "tests/frameworks/japa/services.spec.ts": 714,
+      "tests/frameworks/japa/services.spec.ts": 460,
       "test.ts": 25,
       "tests/bootstrap.ts": 14,
       "contracts/tests.ts": 7,
@@ -11,18 +11,18 @@
     }
   },
   "Jest": {
-    "linhasTestes": 456,
+    "linhasTestes": 401,
     "linhasConfiguracao": 10,
     "arquivos": {
-      "tests/frameworks/jest/services.spec.ts": 456,
+      "tests/frameworks/jest/services.spec.ts": 401,
       "jest.config.js": 10
     }
   },
   "Vitest": {
-    "linhasTestes": 454,
+    "linhasTestes": 399,
     "linhasConfiguracao": 15,
     "arquivos": {
-      "tests/frameworks/vitest/services.spec.ts": 454,
+      "tests/frameworks/vitest/services.spec.ts": 399,
       "vitest.config.mts": 15
     }
   },

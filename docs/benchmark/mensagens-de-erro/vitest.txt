@@ -1,10 +1,11 @@
+# Saída real com 2 falhas introduzidas de propósito. As linhas de console.log de depuração do próprio UserService (ex.: 'qqaaa', 'chegou aqui') foram removidas.
 
  RUN  v5.0.5 /home/user/girls-chat-api
 
- ❯ tests/frameworks/vitest/zz_falha.spec.ts (12 tests | 2 failed) 26ms
-   ❯ ChatsService (9)
-     × falha ao criar chat duplicado entre os mesmos usuários 5ms
-   ❯ UserService (3)
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts (45 tests | 2 failed) 47ms
+   ❯ ChatsService (26)
+     × falha ao criar chat duplicado entre os mesmos usuários 9ms
+   ❯ UserService (19)
      × cria usuário armazenando a senha com hash MD5 3ms
 
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
@@ -15,13 +16,13 @@ AssertionError: expected [Function] to throw error including 'Chat duplicado' bu
 Expected: "Chat duplicado"
 Received: "Erro ao criar o chat: Chat já existe entre esses usuários"
 
- ❯ tests/frameworks/vitest/zz_falha.spec.ts:68:47
-     66|     ChatMock.find.mockResolvedValue(fakeChat(10, 1))
-     67|
-     68|     await expect(service.createChat('1', '2')).rejects.toThrow('Chat d…
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts:70:47
+     68|     ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+     69|
+     70|     await expect(service.createChat('1', '2')).rejects.toThrow(
        |                                               ^
-     69|     expect(ChatMock.create).not.toHaveBeenCalled()
-     70|   })
+     71|       'Chat duplicado'
+     72|     )
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
 
@@ -41,22 +42,20 @@ Received:
     },
   ]
 
-
 Number of calls: 1
 
- ❯ tests/frameworks/vitest/zz_falha.spec.ts:133:29
-    131|
-    132|     expect(user.id).toBe(1)
-    133|     expect(UserMock.create).toHaveBeenCalledWith({
+ ❯ tests/frameworks/vitest/zz_falha.spec.ts:332:29
+    330|
+    331|     expect(user.id).toBe(1)
+    332|     expect(UserMock.create).toHaveBeenCalledWith({
        |                             ^
-    134|       email: 'ana@test.com',
-    135|       password: md5('senha123'),
+    333|       email: 'ana@test.com',
+    334|       password: md5('senha123'),
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
 
-
  Test Files  1 failed (1)
-      Tests  2 failed | 10 passed (12)
-   Start at  18:22:54
-   Duration  196ms (transform 47%, import 26%, tests 25%, worker 3%)
+      Tests  2 failed | 43 passed (45)
+   Start at  00:41:51
+   Duration  279ms (transform 50%, tests 28%, import 19%, worker 2%)
 
