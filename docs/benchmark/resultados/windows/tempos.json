@@ -1,0 +1,139 @@
+{
+  "ambiente": {
+    "descricao": "Windows pessoal (testes via CMD)",
+    "date": "2026-11-19T01:37:50.777Z",
+    "node": "v24.12.0",
+    "platform": "Windows_NT 10.0.19045 (x64)",
+    "cpu": "AMD Ryzen 5 4600G with Radeon Graphics",
+    "cpus": 12,
+    "memoryGb": 15.4,
+    "runs": 5
+  },
+  "resumo": {
+    "Japa": {
+      "testes": 45,
+      "paredeMediaMs": 6466.6,
+      "paredeDesvioMs": 354.4,
+      "internoMediaMs": 182.6
+    },
+    "Jest": {
+      "testes": 45,
+      "paredeMediaMs": 1344.3,
+      "paredeDesvioMs": 81.2,
+      "internoMediaMs": 836.8
+    },
+    "Vitest": {
+      "testes": 45,
+      "paredeMediaMs": 956.4,
+      "paredeDesvioMs": 17.5,
+      "internoMediaMs": 375
+    }
+  },
+  "execucoes": [
+    {
+      "framework": "Japa",
+      "execucao": 1,
+      "wallMs": 6133.2899,
+      "internalMs": 146,
+      "passed": 45
+    },
+    {
+      "framework": "Japa",
+      "execucao": 2,
+      "wallMs": 6131.6739,
+      "internalMs": 197,
+      "passed": 45
+    },
+    {
+      "framework": "Japa",
+      "execucao": 3,
+      "wallMs": 6564.3108,
+      "internalMs": 183,
+      "passed": 45
+    },
+    {
+      "framework": "Japa",
+      "execucao": 4,
+      "wallMs": 6520.7986,
+      "internalMs": 234,
+      "passed": 45
+    },
+    {
+      "framework": "Japa",
+      "execucao": 5,
+      "wallMs": 6982.9483,
+      "internalMs": 153,
+      "passed": 45
+    },
+    {
+      "framework": "Jest",
+      "execucao": 1,
+      "wallMs": 1395.1734,
+      "internalMs": 866,
+      "passed": 45
+    },
+    {
+      "framework": "Jest",
+      "execucao": 2,
+      "wallMs": 1293.5546,
+      "internalMs": 791,
+      "passed": 45
+    },
+    {
+      "framework": "Jest",
+      "execucao": 3,
+      "wallMs": 1462.0058,
+      "internalMs": 945,
+      "passed": 45
+    },
+    {
+      "framework": "Jest",
+      "execucao": 4,
+      "wallMs": 1270.9564,
+      "internalMs": 775,
+      "passed": 45
+    },
+    {
+      "framework": "Jest",
+      "execucao": 5,
+      "wallMs": 1299.7909,
+      "internalMs": 807,
+      "passed": 45
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 1,
+      "wallMs": 947.3862,
+      "internalMs": 367,
+      "passed": 45
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 2,
+      "wallMs": 965.467,
+      "internalMs": 384,
+      "passed": 45
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 3,
+      "wallMs": 980.457,
+      "internalMs": 398,
+      "passed": 45
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 4,
+      "wallMs": 934.6564,
+      "internalMs": 363,
+      "passed": 45
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 5,
+      "wallMs": 954.1395,
+      "internalMs": 363,
+      "passed": 45
+    }
+  ]
+}

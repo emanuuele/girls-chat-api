@@ -7,11 +7,11 @@ Equipe: Ana Alícia, Emanuele Maria, Fábio Henrique, Joserlan Gonçalves e Joel
 
 | Arquivo | Conteúdo |
 |---|---|
-| [`relatorio-tecnico.pdf`](relatorio-tecnico.pdf) | Relatório técnico (ainda com os números da versão de 12 testes; atualização na Tarefa B) |
-| [`dados-brutos.xlsx`](dados-brutos.xlsx) | Planilha de dados brutos (idem) |
-| [`apresentacao.pptx`](apresentacao.pptx) | Slides para 10 a 15 minutos (idem) |
+| [`relatorio-tecnico.pdf`](relatorio-tecnico.pdf) | Relatório técnico (versão de 45 testes, com as duas medições; o `.html` é a fonte do PDF) |
+| [`dados-brutos.xlsx`](dados-brutos.xlsx) | Tempos de cada execução, linhas, cobertura (com evolução), configuração, notas e tabela comparativa, com fórmulas |
+| [`apresentacao.pptx`](apresentacao.pptx) | Slides para 10 a 15 minutos, com notas do apresentador |
 | [`resultados/linux/`](resultados/linux) | Medição atual (45 testes): tempos e cobertura na VM/contêiner Linux em nuvem |
-| `resultados/windows/` | Medição atual no Windows pessoal: gerada ao rodar `npm run benchmark` no Windows |
+| [`resultados/windows/`](resultados/windows) | Medição atual (45 testes): tempos no Windows pessoal (testes via CMD) |
 | [`resultados/`](resultados) | Dados que não dependem do ambiente: linhas de código, configuração/dependências e notas qualitativas |
 | [`resultados/historico/`](resultados/historico) | Medições anteriores (12 testes em Linux e Windows; 34 testes no Windows do Fábio) |
 | [`mensagens-de-erro/`](mensagens-de-erro) | Saída real de cada framework para duas falhas introduzidas de propósito |
@@ -46,15 +46,18 @@ O workflow `.github/workflows/frameworks-teste-unitario.yml` roda os três frame
 
 ## Resultados (versão atual: 45 testes)
 
-### Tempo de execução: VM/contêiner Linux em nuvem (média de 5 execuções após 1 aquecimento)
+### Tempo de execução (média de 5 execuções após 1 aquecimento)
 
-| Framework | Parede (ms) | Interno (ms) |
-|---|---:|---:|
-| Japa | 1.205,5 ± 67,5 | 101,0 |
-| Jest | 712,2 ± 27,5 | 403,4 |
-| Vitest | **492,4 ± 29,6** | 193,0 |
+- **Medição 1: VM/contêiner Linux em nuvem**, em [`resultados/linux/`](resultados/linux)
+- **Medição 2: Windows pessoal (testes via CMD)**, em [`resultados/windows/`](resultados/windows)
 
-A ordem é a mesma da versão de 12 testes: **Vitest < Jest < Japa**. A medição no Windows pessoal deve ser refeita com os 45 testes (`npm run benchmark` no CMD), gravando em `resultados/windows/`.
+| Framework | Linux: parede (ms) | Linux: interno (ms) | Windows: parede (ms) | Windows: interno (ms) |
+|---|---:|---:|---:|---:|
+| Japa | 1.205,5 ± 67,5 | 101,0 | 6.466,6 ± 354,4 | 182,6 |
+| Jest | 712,2 ± 27,5 | 403,4 | 1.344,3 ± 81,2 | 836,8 |
+| Vitest | **492,4 ± 29,6** | 193,0 | **956,4 ± 17,5** | 375,0 |
+
+Os valores absolutos diferem porque as medições vêm de ambientes diferentes. A ordem é a mesma nos dois e também na versão de 12 testes: **Vitest < Jest < Japa** no tempo de parede.
 
 ### Indicadores que não dependem do ambiente
 

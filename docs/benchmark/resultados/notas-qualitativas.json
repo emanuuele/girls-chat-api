@@ -18,7 +18,7 @@
       "criterio": "Mensagens de erro",
       "Japa": [3, "Diff legível em deepEqual e trecho do código do teste, mas truncou a mensagem recebida em rejects ('Chat já existe …') e exibiu um aviso confuso sobre tipos; asserções sobre stubs do Sinon (isFalse(stub.called)) não mostram contexto das chamadas."],
       "Jest": [5, "Mostra a substring esperada e a mensagem recebida completas, o trecho do serviço onde o erro foi lançado, diff de argumentos do mock e 'Number of calls'."],
-      "Vitest": [4, "Expected/Received completos, diff dos argumentos do vi.fn() e número de chamadas; a linha do código-fonte exibida é truncada ('Chat d…')."]
+      "Vitest": [4, "Expected/Received completos, diff dos argumentos do vi.fn() e número de chamadas; a primeira linha do erro abrevia a mensagem recebida ('Chat já existe …'), que só aparece inteira nas linhas Expected/Received logo abaixo, e não mostra onde o erro foi lançado no serviço (o Jest mostra)."]
     },
     {
       "criterio": "Integração com IDE e CI/CD",
