@@ -18,7 +18,7 @@ const path = require('path')
 
 const ROOT = path.resolve(__dirname, '../..')
 const RUNS = Number(process.argv[2] || 5)
-const EXPECTED_TESTS = 34
+const EXPECTED_TESTS = 45
 const PLATFORM_DIR = { win32: 'windows', darwin: 'macos', linux: 'linux' }[process.platform] || process.platform
 const OUT_DIR = path.join(ROOT, 'docs/benchmark/resultados', process.argv[3] || PLATFORM_DIR)
 // Chama o ponto de entrada JS de cada pacote com o próprio Node: funciona igual no

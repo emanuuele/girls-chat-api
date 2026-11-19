@@ -5,6 +5,7 @@ import UserService from 'App/services/UserService'
 import User from 'App/Models/User'
 import Chat from 'App/Models/Chat'
 import Participant from 'App/Models/Participant'
+import { FirebaseAdminService } from 'App/services/FirebaseAdmin'
 import { fakeChat, fakeParticipant, fakeQuery, fakeUser } from '../shared/fakes'
 
 vi.mock('App/Models/User', () => ({
@@ -16,11 +17,12 @@ vi.mock('App/Models/Chat', () => ({
 vi.mock('App/Models/Participant', () => ({
   default: { query: vi.fn(), create: vi.fn() },
 }))
-vi.mock('App/services/FirebaseAdmin', () => ({ FirebaseAdminService: {} }))
+vi.mock('App/services/FirebaseAdmin', () => ({ FirebaseAdminService: { getStorage: vi.fn() } }))
 
 const UserMock = User as unknown as Record<'find' | 'query' | 'create', Mock>
 const ChatMock = Chat as unknown as Record<'find' | 'create', Mock>
 const ParticipantMock = Participant as unknown as Record<'query' | 'create', Mock>
+const StorageMock = FirebaseAdminService as unknown as Record<'getStorage', Mock>
 
 beforeEach(() => {
   vi.resetAllMocks()
@@ -285,6 +287,61 @@ test('retorna chat com participantes quando informado usuário logado', async ()
 
   expect(result.participant).toHaveLength(1)
 })
+  test('falha ao buscar chats sem informar o usuário', async () => {
+    await expect(service.getUserChats('')).rejects.toThrow('O ID do usuário é obrigatório')
+  })
+
+  test('ordena os chats do usuário pela última mensagem', async () => {
+    const participation = (id: number, lastMessageAt: string | null) => ({
+      chat: { id, toJSON: () => ({ id, last_message_at: lastMessageAt }) },
+    })
+    ParticipantMock.query
+      .mockReturnValueOnce(
+        fakeQuery([
+          participation(10, '2026-01-01T10:00:00.000Z'),
+          participation(11, '2026-02-01T10:00:00.000Z'),
+          participation(12, null),
+        ])
+      )
+      .mockReturnValue(fakeQuery([{ user: fakeUser(2) }]))
+
+    const chats = await service.getUserChats('1')
+
+    expect(chats.map((chat: any) => chat.id)).toEqual([11, 10, 12])
+  })
+
+  test('falha ao buscar chat sem informar o id', async () => {
+    await expect(service.showChat('')).rejects.toThrow('O ID do chat é obrigatório')
+  })
+
+  test('falha ao criar chat quando o participante não existe', async () => {
+    UserMock.find.mockImplementation(async (id: number) => (id === 2 ? null : fakeUser(id)))
+
+    await expect(service.createChat('1', '2')).rejects.toThrow(
+      'Usuário participante com ID 2 não encontrado'
+    )
+    expect(ChatMock.create).not.toHaveBeenCalled()
+  })
+
+  test('falha ao verificar chat entre usuários sem informar os IDs', async () => {
+    await expect(service.chatBetweenUsers('', '2')).rejects.toThrow(
+      'Os IDs dos usuários são obrigatórios'
+    )
+  })
+
+  test('falha ao atualizar a última mensagem sem informar o texto', async () => {
+    await expect(service.updateLastMessage(10, '')).rejects.toThrow(
+      'O ID do chat e o texto da mensagem são obrigatórios'
+    )
+  })
+
+  test('falha ao remover participante que não está no chat', async () => {
+    ParticipantMock.query.mockReturnValue(fakeQuery([]))
+
+    await expect(service.removeParticipantFromChat(10, 2)).rejects.toThrow(
+      'Participante não encontrado no chat'
+    )
+  })
 })
 
 describe('UserService', () => {
@@ -448,4 +505,49 @@ test('falha ao buscar usuário sem informar id', async () => {
     service.getUserById('')
   ).rejects.toThrow('O ID do usuário é obrigatório')
 })
+  test('falha ao atualizar usuário sem informar id', async () => {
+    await expect(service.updateUser('', { name: 'Maria' })).rejects.toThrow(
+      'O ID do usuário é obrigatório'
+    )
+  })
+
+  test('salva foto de perfil e torna a imagem pública', async () => {
+    const user: any = { id: 1, save: vi.fn() }
+    const uploaded = { publicUrl: () => 'https://storage.test/1.jpg', makePublic: vi.fn() }
+    UserMock.find.mockResolvedValue(user)
+    StorageMock.getStorage.mockReturnValue({
+      bucket: () => ({ upload: async () => [uploaded] }),
+    })
+    const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
+
+    const result = await service.saveProfilePicture(1, file)
+
+    expect(result.profile_picture).toBe('https://storage.test/1.jpg')
+    expect(uploaded.makePublic).toHaveBeenCalled()
+    expect(user.save).toHaveBeenCalled()
+  })
+
+  test('falha ao salvar foto quando o upload não retorna URL pública', async () => {
+    UserMock.find.mockResolvedValue({ id: 1, save: vi.fn() })
+    StorageMock.getStorage.mockReturnValue({
+      bucket: () => ({ upload: async () => [{ publicUrl: () => '', makePublic: vi.fn() }] }),
+    })
+    const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
+
+    await expect(service.saveProfilePicture(1, file)).rejects.toThrow(
+      'Falha ao fazer upload da imagem'
+    )
+  })
+
+  test('falha ao salvar foto quando o Storage rejeita o envio', async () => {
+    UserMock.find.mockResolvedValue({ id: 1, save: vi.fn() })
+    StorageMock.getStorage.mockReturnValue({
+      bucket: () => ({ upload: async () => { throw new Error('sem permissão') } }),
+    })
+    const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
+
+    await expect(service.saveProfilePicture(1, file)).rejects.toThrow(
+      'Erro ao salvar imagem de perfil no Google Storage: sem permissão'
+    )
+  })
 })

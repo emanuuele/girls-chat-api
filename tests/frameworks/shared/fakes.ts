@@ -14,7 +14,15 @@
 export function fakeQuery<T>(rows: T[] = []) {
   const builder: any = {}
   for (const method of ['where', 'whereNot', 'andWhere', 'select', 'preload', 'orderBy']) {
-    builder[method] = () => builder
+    // Como no Lucid, executa o callback recebido (ex.: preload('chat', (q) => ...)),
+    // para que o código dentro das subconsultas também seja exercitado.
+    builder[method] = (...args: unknown[]) => {
+      const callback = args.find((arg) => typeof arg === 'function') as
+        | ((query: unknown) => void)
+        | undefined
+      if (callback) callback(builder)
+      return builder
+    }
   }
   builder.first = async () => rows[0] ?? null
   builder.then = (resolve: (v: T[]) => unknown, reject: (e: unknown) => unknown) =>

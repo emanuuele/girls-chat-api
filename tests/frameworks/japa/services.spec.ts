@@ -8,6 +8,7 @@ import UserService from 'App/services/UserService'
 import User from 'App/Models/User'
 import Chat from 'App/Models/Chat'
 import Participant from 'App/Models/Participant'
+import { FirebaseAdminService } from 'App/services/FirebaseAdmin'
 
 import {
   fakeChat,
@@ -467,6 +468,64 @@ test.group('ChatsService', (group) => {
       assert.equal(result.participant[0].id, 2)
     }
   )
+  test('falha ao buscar chats sem informar o usuário', async ({ assert }) => {
+    await assert.rejects(() => service.getUserChats(''), /O ID do usuário é obrigatório/)
+  })
+
+  test('ordena os chats do usuário pela última mensagem', async ({ assert }) => {
+    const participation = (id: number, lastMessageAt: string | null) => ({
+      chat: { id, toJSON: () => ({ id, last_message_at: lastMessageAt }) },
+    })
+    stubs.participantQuery.onFirstCall().returns(
+      fakeQuery([
+        participation(10, '2026-01-01T10:00:00.000Z'),
+        participation(11, '2026-02-01T10:00:00.000Z'),
+        participation(12, null),
+      ]) as any
+    )
+    stubs.participantQuery.returns(fakeQuery([{ user: fakeUser(2) }]) as any)
+
+    const chats = await service.getUserChats('1')
+
+    assert.deepEqual(chats.map((chat: any) => chat.id), [11, 10, 12])
+  })
+
+  test('falha ao buscar chat sem informar o id', async ({ assert }) => {
+    await assert.rejects(() => service.showChat(''), /O ID do chat é obrigatório/)
+  })
+
+  test('falha ao criar chat quando o participante não existe', async ({ assert }) => {
+    stubs.userFind.callsFake(async (id: any) => (id === 2 ? null : (fakeUser(id) as any)))
+
+    await assert.rejects(
+      () => service.createChat('1', '2'),
+      /Usuário participante com ID 2 não encontrado/
+    )
+    assert.isFalse(stubs.chatCreate.called)
+  })
+
+  test('falha ao verificar chat entre usuários sem informar os IDs', async ({ assert }) => {
+    await assert.rejects(
+      () => service.chatBetweenUsers('', '2'),
+      /Os IDs dos usuários são obrigatórios/
+    )
+  })
+
+  test('falha ao atualizar a última mensagem sem informar o texto', async ({ assert }) => {
+    await assert.rejects(
+      () => service.updateLastMessage(10, ''),
+      /O ID do chat e o texto da mensagem são obrigatórios/
+    )
+  })
+
+  test('falha ao remover participante que não está no chat', async ({ assert }) => {
+    stubs.participantQuery.returns(fakeQuery([]) as any)
+
+    await assert.rejects(
+      () => service.removeParticipantFromChat(10, 2),
+      /Participante não encontrado no chat/
+    )
+  })
 })
 
 /*
@@ -759,4 +818,52 @@ test.group('UserService', (group) => {
       )
     }
   )
+  test('falha ao atualizar usuário sem informar id', async ({ assert }) => {
+    await assert.rejects(
+      () => service.updateUser('', { name: 'Maria' }),
+      /O ID do usuário é obrigatório/
+    )
+  })
+
+  test('salva foto de perfil e torna a imagem pública', async ({ assert }) => {
+    const user: any = { id: 1, save: sinon.spy() }
+    const uploaded = { publicUrl: () => 'https://storage.test/1.jpg', makePublic: sinon.spy() }
+    stubs.userFind.resolves(user)
+    sinon.stub(FirebaseAdminService, 'getStorage').returns({
+      bucket: () => ({ upload: async () => [uploaded] }),
+    } as any)
+    const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
+
+    const result = await service.saveProfilePicture(1, file)
+
+    assert.equal(result.profile_picture, 'https://storage.test/1.jpg')
+    assert.isTrue(uploaded.makePublic.called)
+    assert.isTrue(user.save.called)
+  })
+
+  test('falha ao salvar foto quando o upload não retorna URL pública', async ({ assert }) => {
+    stubs.userFind.resolves({ id: 1, save: sinon.spy() } as any)
+    sinon.stub(FirebaseAdminService, 'getStorage').returns({
+      bucket: () => ({ upload: async () => [{ publicUrl: () => '', makePublic: sinon.spy() }] }),
+    } as any)
+    const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
+
+    await assert.rejects(
+      () => service.saveProfilePicture(1, file),
+      /Falha ao fazer upload da imagem/
+    )
+  })
+
+  test('falha ao salvar foto quando o Storage rejeita o envio', async ({ assert }) => {
+    stubs.userFind.resolves({ id: 1, save: sinon.spy() } as any)
+    sinon.stub(FirebaseAdminService, 'getStorage').returns({
+      bucket: () => ({ upload: async () => { throw new Error('sem permissão') } }),
+    } as any)
+    const file: any = { extname: 'jpg', type: 'image/jpeg', tmpPath: 'foto-temporaria.jpg' }
+
+    await assert.rejects(
+      () => service.saveProfilePicture(1, file),
+      /Erro ao salvar imagem de perfil no Google Storage: sem permissão/
+    )
+  })
 })
