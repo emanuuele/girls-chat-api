@@ -1,9 +1,9 @@
 {
   "Japa": {
-    "linhasTestes": 130,
+    "linhasTestes": 714,
     "linhasConfiguracao": 71,
     "arquivos": {
-      "tests/frameworks/japa/services.spec.ts": 130,
+      "tests/frameworks/japa/services.spec.ts": 714,
       "test.ts": 25,
       "tests/bootstrap.ts": 14,
       "contracts/tests.ts": 7,
@@ -11,26 +11,26 @@
     }
   },
   "Jest": {
-    "linhasTestes": 125,
+    "linhasTestes": 456,
     "linhasConfiguracao": 10,
     "arquivos": {
-      "tests/frameworks/jest/services.spec.ts": 125,
+      "tests/frameworks/jest/services.spec.ts": 456,
       "jest.config.js": 10
     }
   },
   "Vitest": {
-    "linhasTestes": 123,
+    "linhasTestes": 454,
     "linhasConfiguracao": 15,
     "arquivos": {
-      "tests/frameworks/vitest/services.spec.ts": 123,
+      "tests/frameworks/vitest/services.spec.ts": 454,
       "vitest.config.mts": 15
     }
   },
   "Compartilhado": {
-    "linhasTestes": 40,
+    "linhasTestes": 46,
     "linhasConfiguracao": 0,
     "arquivos": {
-      "tests/frameworks/shared/fakes.ts": 40
+      "tests/frameworks/shared/fakes.ts": 46
     }
   }
 }

@@ -1,0 +1,16 @@
+framework,execucao,tempo_parede_ms,tempo_interno_ms,testes_aprovados
+Japa,1,3507.7,106,34
+Japa,2,3439.6,107,34
+Japa,3,3320.8,110,34
+Japa,4,3375.4,99,34
+Japa,5,3273.8,94,34
+Jest,1,815.9,507,34
+Jest,2,833.8,510,34
+Jest,3,814.9,504,34
+Jest,4,835.0,509,34
+Jest,5,832.5,521,34
+Vitest,1,687.1,266,34
+Vitest,2,676.8,258,34
+Vitest,3,667.0,255,34
+Vitest,4,674.1,254,34
+Vitest,5,686.0,264,34
