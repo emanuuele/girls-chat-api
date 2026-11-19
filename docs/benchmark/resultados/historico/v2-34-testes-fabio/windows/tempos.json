@@ -1,0 +1,138 @@
+{
+  "ambiente": {
+    "date": "2026-11-17T03:00:20.301Z",
+    "node": "v24.11.1",
+    "platform": "Windows_NT 10.0.26200 (x64)",
+    "cpu": "Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz",
+    "cpus": 12,
+    "memoryGb": 15.9,
+    "runs": 5
+  },
+  "resumo": {
+    "Japa": {
+      "testes": 34,
+      "paredeMediaMs": 3383.4,
+      "paredeDesvioMs": 93,
+      "internoMediaMs": 103.2
+    },
+    "Jest": {
+      "testes": 34,
+      "paredeMediaMs": 826.4,
+      "paredeDesvioMs": 10.1,
+      "internoMediaMs": 510.2
+    },
+    "Vitest": {
+      "testes": 34,
+      "paredeMediaMs": 678.2,
+      "paredeDesvioMs": 8.4,
+      "internoMediaMs": 259.4
+    }
+  },
+  "execucoes": [
+    {
+      "framework": "Japa",
+      "execucao": 1,
+      "wallMs": 3507.706,
+      "internalMs": 106,
+      "passed": 34
+    },
+    {
+      "framework": "Japa",
+      "execucao": 2,
+      "wallMs": 3439.5717,
+      "internalMs": 107,
+      "passed": 34
+    },
+    {
+      "framework": "Japa",
+      "execucao": 3,
+      "wallMs": 3320.7565,
+      "internalMs": 110,
+      "passed": 34
+    },
+    {
+      "framework": "Japa",
+      "execucao": 4,
+      "wallMs": 3375.364,
+      "internalMs": 99,
+      "passed": 34
+    },
+    {
+      "framework": "Japa",
+      "execucao": 5,
+      "wallMs": 3273.7653,
+      "internalMs": 94,
+      "passed": 34
+    },
+    {
+      "framework": "Jest",
+      "execucao": 1,
+      "wallMs": 815.8641,
+      "internalMs": 507,
+      "passed": 34
+    },
+    {
+      "framework": "Jest",
+      "execucao": 2,
+      "wallMs": 833.7529,
+      "internalMs": 510,
+      "passed": 34
+    },
+    {
+      "framework": "Jest",
+      "execucao": 3,
+      "wallMs": 814.9386,
+      "internalMs": 504,
+      "passed": 34
+    },
+    {
+      "framework": "Jest",
+      "execucao": 4,
+      "wallMs": 834.958,
+      "internalMs": 509,
+      "passed": 34
+    },
+    {
+      "framework": "Jest",
+      "execucao": 5,
+      "wallMs": 832.5034,
+      "internalMs": 521,
+      "passed": 34
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 1,
+      "wallMs": 687.1139,
+      "internalMs": 266,
+      "passed": 34
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 2,
+      "wallMs": 676.8104,
+      "internalMs": 258,
+      "passed": 34
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 3,
+      "wallMs": 667.0281,
+      "internalMs": 255,
+      "passed": 34
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 4,
+      "wallMs": 674.1265,
+      "internalMs": 254,
+      "passed": 34
+    },
+    {
+      "framework": "Vitest",
+      "execucao": 5,
+      "wallMs": 685.9986,
+      "internalMs": 264,
+      "passed": 34
+    }
+  ]
+}

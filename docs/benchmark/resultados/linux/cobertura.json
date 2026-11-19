@@ -1,62 +1,62 @@
 {
   "japa": {
     "total": {
-      "linhas": 44.98,
-      "instrucoes": 44.98,
-      "ramos": 72.72,
-      "funcoes": 40
+      "linhas": 98.45,
+      "instrucoes": 98.45,
+      "ramos": 97.87,
+      "funcoes": 100
     },
     "ChatsService.ts": {
-      "linhas": 52.58,
-      "instrucoes": 52.58,
-      "ramos": 67.85,
-      "funcoes": 62.5
+      "linhas": 97.6,
+      "instrucoes": 97.6,
+      "ramos": 96.66,
+      "funcoes": 100
     },
     "UserService.ts": {
-      "linhas": 31.15,
-      "instrucoes": 31.15,
+      "linhas": 100,
+      "instrucoes": 100,
       "ramos": 100,
-      "funcoes": 14.28
+      "funcoes": 100
     }
   },
   "jest": {
     "total": {
-      "linhas": 44.98,
-      "instrucoes": 44.98,
-      "ramos": 72.72,
-      "funcoes": 40
+      "linhas": 98.45,
+      "instrucoes": 98.45,
+      "ramos": 97.87,
+      "funcoes": 100
     },
     "ChatsService.ts": {
-      "linhas": 52.58,
-      "instrucoes": 52.58,
-      "ramos": 67.85,
-      "funcoes": 62.5
+      "linhas": 97.6,
+      "instrucoes": 97.6,
+      "ramos": 96.66,
+      "funcoes": 100
     },
     "UserService.ts": {
-      "linhas": 31.15,
-      "instrucoes": 31.15,
+      "linhas": 100,
+      "instrucoes": 100,
       "ramos": 100,
-      "funcoes": 14.28
+      "funcoes": 100
     }
   },
   "vitest": {
     "total": {
-      "linhas": 37.34,
-      "instrucoes": 38.01,
-      "ramos": 39.24,
-      "funcoes": 32.14
+      "linhas": 98.79,
+      "instrucoes": 98.83,
+      "ramos": 98.73,
+      "funcoes": 96.42
     },
     "ChatsService.ts": {
-      "linhas": 52.52,
-      "instrucoes": 52.88,
-      "ramos": 52.27,
-      "funcoes": 38.09
+      "linhas": 97.97,
+      "instrucoes": 98.07,
+      "ramos": 97.72,
+      "funcoes": 95.23
     },
     "UserService.ts": {
-      "linhas": 14.92,
-      "instrucoes": 14.92,
-      "ramos": 22.85,
-      "funcoes": 14.28
+      "linhas": 100,
+      "instrucoes": 100,
+      "ramos": 100,
+      "funcoes": 100
     }
   }
 }
