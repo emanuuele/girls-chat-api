@@ -120,6 +120,105 @@ describe('ChatsService', () => {
     expect(result).toBe(true)
     expect(participant.deleted).toBe(true)
   })
+test('retorna null quando não existe chat entre usuários', async () => {
+  ParticipantMock.query
+    .mockReturnValueOnce(fakeQuery([]))
+    .mockReturnValueOnce(fakeQuery([]))
+
+  const chat = await service.chatBetweenUsers('1', '2')
+
+  expect(chat).toBeNull()
+})
+
+test('adiciona participante ao chat com sucesso', async () => {
+  ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+  UserMock.find.mockResolvedValue(fakeUser(2))
+  ParticipantMock.query.mockReturnValue(fakeQuery([]))
+
+  ParticipantMock.create.mockResolvedValue(
+    fakeParticipant(10, 2)
+  )
+
+  const participant = await service.addParticipantToChat(
+    10,
+    2
+  )
+
+  expect(participant.id_chat).toBe(10)
+})
+
+test('falha ao adicionar participante em chat inexistente', async () => {
+  ChatMock.find.mockResolvedValue(null)
+
+  await expect(
+    service.addParticipantToChat(10, 2)
+  ).rejects.toThrow('Chat não encontrado')
+})
+
+test('falha ao adicionar participante inexistente', async () => {
+  ChatMock.find.mockResolvedValue(fakeChat(10, 1))
+  UserMock.find.mockResolvedValue(null)
+
+  await expect(
+    service.addParticipantToChat(10, 2)
+  ).rejects.toThrow('Usuário não encontrado')
+})
+test('retorna participantes do chat', async () => {
+  ParticipantMock.query.mockReturnValue(
+    fakeQuery([
+      { user: fakeUser(1) },
+      { user: fakeUser(2) }
+    ])
+  )
+
+  const participants = await service.getChatParticipants(10)
+
+  expect(participants).toHaveLength(2)
+})
+test('retorna lista vazia quando usuário não possui chats', async () => {
+  ParticipantMock.query.mockReturnValue(
+    fakeQuery([])
+  )
+
+  const chats = await service.getUserChats('1')
+
+  expect(chats).toEqual([])
+})
+test('falha ao buscar chat inexistente', async () => {
+  ChatMock.query = jest.fn(() => ({
+    where: () => ({
+      preload: () => ({
+        preload: () => ({
+          preload: () => ({
+            first: async () => null
+          })
+        })
+      })
+    })
+  }))
+
+  await expect(
+    service.showChat('99')
+  ).rejects.toThrow('Chat não encontrado')
+})
+test('retorna participantes de um chat', async () => {
+  const participant1 = {
+    user: fakeUser(1),
+  }
+
+  const participant2 = {
+    user: fakeUser(2),
+  }
+
+  ParticipantMock.query.mockReturnValue(
+    fakeQuery([participant1, participant2])
+  )
+
+  const result = await service.getChatParticipants(10)
+
+  expect(result).toHaveLength(2)
+  expect(result[0].id).toBe(1)
+})
 })
 
 describe('UserService', () => {
@@ -154,4 +253,156 @@ describe('UserService', () => {
     )
     expect(UserMock.create).not.toHaveBeenCalled()
   })
+test('busca usuário por id', async () => {
+  UserMock.find.mockResolvedValue(fakeUser(1))
+
+  const user = await service.getUserById(1)
+
+  expect(user?.id).toBe(1)
+})
+
+test('falha ao buscar usuário inexistente', async () => {
+  UserMock.find.mockResolvedValue(null)
+
+  await expect(
+    service.getUserById(999)
+  ).rejects.toThrow('Usuário não encontrado')
+})
+
+test('retorna usuários exceto o informado', async () => {
+  UserMock.query.mockReturnValue(
+    fakeQuery([
+      fakeUser(2),
+      fakeUser(3)
+    ])
+  )
+
+  const users = await service.getAllUsersExcept(1)
+
+  expect(users).toHaveLength(2)
+})
+
+test('atualiza usuário existente', async () => {
+  const user: any = {
+    id: 1,
+    name: 'Ana',
+    merge: jest.fn(),
+    save: jest.fn(),
+  }
+
+  UserMock.query.mockReturnValue(fakeQuery([user]))
+
+  const result = await service.updateUser('1', {
+    name: 'Maria'
+  })
+
+  expect(user.merge).toHaveBeenCalled()
+  expect(result).toBe(user)
+})
+test('busca usuário por id', async () => {
+  UserMock.find.mockResolvedValue(fakeUser(1))
+
+  const user = await service.getUserById(1)
+
+  expect(user.id).toBe(1)
+})
+
+test('falha quando usuário não existe', async () => {
+  UserMock.find.mockResolvedValue(null)
+
+  await expect(
+    service.getUserById(999)
+  ).rejects.toThrow('Usuário não encontrado')
+})
+
+test('retorna usuários exceto o informado', async () => {
+  UserMock.query.mockReturnValue(
+    fakeQuery([
+      fakeUser(2),
+      fakeUser(3)
+    ])
+  )
+
+  const users = await service.getAllUsersExcept(1)
+
+  expect(users).toHaveLength(2)
+})
+
+test('atualiza usuário existente', async () => {
+  const user: any = {
+    merge: jest.fn(),
+    save: jest.fn()
+  }
+
+  UserMock.query.mockReturnValue(fakeQuery([user]))
+
+  const result = await service.updateUser('1', {
+    name: 'Maria'
+  })
+
+  expect(result).toBe(user)
+  expect(user.merge).toHaveBeenCalled()
+})
+test('realiza login com email e senha válidos', async () => {
+  UserMock.query.mockReturnValue(
+    fakeQuery([
+      {
+        id: 1,
+        email: 'ana@test.com',
+      },
+    ])
+  )
+
+  const user = await service.getUserByEmailAndPassword(
+    'ana@test.com',
+    '123456'
+  )
+
+  expect(user.id).toBe(1)
+})
+
+test('falha no login quando usuário não existe', async () => {
+  UserMock.query.mockReturnValue(fakeQuery([]))
+
+  await expect(
+    service.getUserByEmailAndPassword(
+      'ana@test.com',
+      '123456'
+    )
+  ).rejects.toThrow('Usuário não encontrado')
+})
+
+test('falha ao atualizar usuário inexistente', async () => {
+  UserMock.query.mockReturnValue(fakeQuery([]))
+
+  await expect(
+    service.updateUser('999', {
+      name: 'Maria',
+    })
+  ).rejects.toThrow('Usuário não encontrado')
+})
+
+test('falha ao buscar usuários sem informar id', async () => {
+  await expect(
+    service.getAllUsersExcept('')
+  ).rejects.toThrow('O ID do usuário é obrigatório')
+})
+
+test('falha ao buscar usuário sem informar id', async () => {
+  await expect(
+    service.getUserById('')
+  ).rejects.toThrow('O ID do usuário é obrigatório')
+})
+test('falha ao buscar login com email inválido', async () => {
+  await expect(
+    service.getUserByEmailAndPassword(
+      'email-invalido',
+      '123456'
+    )
+  ).rejects.toThrow(
+    'Preencha o campo senha e e-mail corretamente'
+  )
+
+  expect(UserMock.query).not.toHaveBeenCalled()
+})
 })
