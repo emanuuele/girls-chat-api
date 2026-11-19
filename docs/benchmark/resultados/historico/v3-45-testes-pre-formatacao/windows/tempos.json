@@ -1,0 +1,34 @@
+{
+  "ambiente": {
+    "descricao": "Windows pessoal (testes via CMD), 45 testes, antes da padronização da formatação",
+    "date": "2026-11-19T01:31:01.563Z",
+    "node": "v24.12.0",
+    "platform": "Windows_NT 10.0.19045 (x64)",
+    "cpu": "AMD Ryzen 5 4600G with Radeon Graphics",
+    "cpus": 12,
+    "memoryGb": 15.4,
+    "runs": 5
+  },
+  "resumo": {
+    "Japa": { "testes": 45, "paredeMediaMs": 6677.6, "paredeDesvioMs": 167.2, "internoMediaMs": 155.4 },
+    "Jest": { "testes": 45, "paredeMediaMs": 1345.7, "paredeDesvioMs": 45, "internoMediaMs": 825 },
+    "Vitest": { "testes": 45, "paredeMediaMs": 1147.5, "paredeDesvioMs": 145.1, "internoMediaMs": 437.4 }
+  },
+  "execucoes": [
+    { "framework": "Japa", "execucao": 1, "wallMs": 6512.6837, "internalMs": 154, "passed": 45 },
+    { "framework": "Japa", "execucao": 2, "wallMs": 6594.2959, "internalMs": 152, "passed": 45 },
+    { "framework": "Japa", "execucao": 3, "wallMs": 6937.5987, "internalMs": 166, "passed": 45 },
+    { "framework": "Japa", "execucao": 4, "wallMs": 6742.4504, "internalMs": 163, "passed": 45 },
+    { "framework": "Japa", "execucao": 5, "wallMs": 6600.9198, "internalMs": 142, "passed": 45 },
+    { "framework": "Jest", "execucao": 1, "wallMs": 1325.5613, "internalMs": 798, "passed": 45 },
+    { "framework": "Jest", "execucao": 2, "wallMs": 1416.7473, "internalMs": 906, "passed": 45 },
+    { "framework": "Jest", "execucao": 3, "wallMs": 1336.7128, "internalMs": 799, "passed": 45 },
+    { "framework": "Jest", "execucao": 4, "wallMs": 1353.9823, "internalMs": 830, "passed": 45 },
+    { "framework": "Jest", "execucao": 5, "wallMs": 1295.5514, "internalMs": 792, "passed": 45 },
+    { "framework": "Vitest", "execucao": 1, "wallMs": 1111.3794, "internalMs": 481, "passed": 45 },
+    { "framework": "Vitest", "execucao": 2, "wallMs": 1397.4998, "internalMs": 448, "passed": 45 },
+    { "framework": "Vitest", "execucao": 3, "wallMs": 1130.654, "internalMs": 463, "passed": 45 },
+    { "framework": "Vitest", "execucao": 4, "wallMs": 1029.5814, "internalMs": 397, "passed": 45 },
+    { "framework": "Vitest", "execucao": 5, "wallMs": 1068.6094, "internalMs": 398, "passed": 45 }
+  ]
+}

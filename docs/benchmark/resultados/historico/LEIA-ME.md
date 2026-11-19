@@ -7,3 +7,4 @@ As medições atuais (45 testes idênticos nos 3 frameworks) ficam em `../linux/
 | `v1-12-testes/linux` | 12 testes | VM/contêiner Linux em nuvem | medição original do estudo |
 | `v1-12-testes/windows` | 12 testes | Windows pessoal (testes via CMD) | segunda medição |
 | `v2-34-testes-fabio/windows` | 34 testes (Tarefa C, versão do Fábio) | Windows do Fábio | nesta versão o Jest ainda tinha casos diferentes dos outros dois frameworks; não serve para comparação direta |
+| `v3-45-testes-pre-formatacao/windows` | 45 testes, antes da padronização da formatação | Windows pessoal (testes via CMD) | mesmos testes da versão final; refeita depois do merge da formatação para medir exatamente o código final |
